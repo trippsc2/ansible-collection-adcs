@@ -1,0 +1,7 @@
+---
+winsubca_ca_common_name: "{{ winca_ca_cert_common_name }}"
+winsubca_ca_distinguished_name_suffix: "{{ winca_ca_distinguished_name_suffix }}"
+
+winsubca_signing_ca_hostname: srootca
+winsubca_signing_ca_fqdn: srootca
+winsubca_signing_ca_common_name: srootca

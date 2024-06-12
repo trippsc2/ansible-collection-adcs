@@ -1,0 +1,9 @@
+---
+- name: Prepare AD CS certification authority
+  hosts:
+    - rootca
+  roles:
+    - role: trippsc2.adcs_certification_authority
+  tasks:
+    - name: Reboot
+      ansible.windows.win_reboot:

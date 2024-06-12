@@ -1,0 +1,16 @@
+---
+winca_install_management_tools: true
+
+winca_is_root_ca: true
+winca_is_ad_integrated: false
+
+winca_add_certenroll_virtual_directory: false
+
+winca_crypto_provider_name: RSA#Microsoft Software Key Storage Provider
+winca_hash_algorithm_name: sha256
+winca_key_length: 2048
+winca_overwrite_existing_key: false
+
+winca_ignore_unicode: false
+winca_ca_cert_validity_period: 5
+winca_ca_cert_validity_period_unit: Years

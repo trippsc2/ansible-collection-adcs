@@ -1,0 +1,79 @@
+---
+output_file: README.md
+output_mode: replace
+
+output_template: |
+  <!-- BEGIN_ANSIBLE_DOCS -->
+  
+  # Ansible Role: {{ role }}
+  {%- if "version" in galaxy_collection %}
+  Version: {{ galaxy_collection.version }}
+  {% endif %}
+  {{ metadata.galaxy_info.description }}
+  {% if ("galaxy_tags" in metadata.galaxy_info) and (metadata.galaxy_info.galaxy_tags | length > 0) %}
+  Tags: {{ metadata.galaxy_info.galaxy_tags | join(', ') }}
+  {%- endif %}
+  ## Requirements
+  {% if ("platforms" in metadata.galaxy_info) and metadata.galaxy_info.platforms | length > 0 %}
+  | Platform | Versions |
+  | -------- | -------- |
+  {%- for platform in metadata.galaxy_info.platforms %}
+  | {{ platform.name }} | <ul>{% for version in platform.versions | default([]) %}<li>{{ version }}</li>{% endfor %}</ul> |
+  {%- endfor %}
+  {%- endif %}
+
+  ## Dependencies
+  {%- if ("dependencies" in metadata) and (metadata.dependencies | length > 0) %}
+  | Role |
+  | ---- |
+  {%- for dependency in metadata.dependencies %}
+  | {{ dependency.role }} |
+  {%- endfor %}
+  {%- endif %}
+  {% if ("collections" in metadata) and metadata.collections | length > 0 %}
+  | Collection |
+  | ---------- |
+  {%- for collection in metadata.collections %}
+  | {{ collection }} |
+  {%- endfor %}
+  {%- endif %}
+  {%- if (("dependencies" not in metadata) or (metadata.dependencies | length == 0)) and (("collections" not in metadata) or (metadata.collections | length == 0)) %}
+  None.
+  {%- endif %}
+
+  ## Role Arguments
+  {% for entrypoint in argument_specs.keys() %}
+  {%- set path, options=entrypoint_options[entrypoint][0] -%}
+
+  |Option|Description|Type|Required|Choices|Default|
+  |---|---|---|---|---|---|
+  {%- for name, details in options.items() %}
+  | {{ name }} | {{ details.display_description }} | {{ details.display_type }} | {{ details.display_required }} | {% if ("choices" in details) %}<ul>{% for choice in details.choices %}<li>{{ choice }}</li>{% endfor %}</ul>{% endif %} | {{ details.display_default }} |
+  {%- endfor %}
+
+  {% if entrypoint_options[entrypoint] | length > 1 -%}
+  {% for path, options in entrypoint_options[entrypoint][1:] -%}
+  ### Options for {{ path[1:] | join(" > ") }}
+  |Option|Description|Type|Required|Choices|Default|
+  |---|---|---|---|---|---|
+  {%- for name, details in options.items() %}
+  | {{ name }} | {{ details.display_description }} | {{ details.display_type }} | {{ details.display_required }} | {% if ("choices" in details) %}<ul>{% for choice in details.choices %}<li>{{ choice }}</li>{% endfor %}</ul>{% endif %} | {{ details.display_default }} |
+  {%- endfor %}
+
+  {% endfor -%}
+  {% endif -%}
+  {% endfor %}
+  ## License
+  {{ metadata.galaxy_info.license }}
+
+  ## Author and Project Information
+  {%- if "company" in metadata.galaxy_info %}
+  {{ metadata.galaxy_info.author }} @ {{ metadata.galaxy_info.company }}
+  {%- else %}
+  {{ metadata.galaxy_info.author }}
+  {%- endif %}
+  {% if metadata.galaxy_info.issue_tracker_url is defined and metadata.galaxy_info.issue_tracker_url | length > 0 %}
+  Issues: [tracker]({{ metadata.galaxy_info.issue_tracker_url }})
+  {%- endif -%}
+
+  <!-- END_ANSIBLE_DOCS -->

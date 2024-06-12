@@ -1,0 +1,69 @@
+---
+- name: Validate root CA variables
+  when:
+    - not winca_is_root_ca
+    - not _winca_enterprise_parent_certificate
+  block:
+    - name: Get certificate store
+      community.windows.win_certificate_info:
+        store_name: My
+      register: _winca_cert_store
+
+    - name: Fail if no certificates exist
+      ansible.builtin.assert:
+        that:
+          - _winca_cert_store.exists
+        fail_msg: "No certificates are installed."
+        success_msg: "At least one certificate is installed.  Continuing validation."
+
+    - name: Filter to only expected certificate
+      ansible.builtin.set_fact:
+        _winca_certs: >-
+          {{ _winca_cert_store.certificates |
+              selectattr('subject', 'contains', 'CN=' + winca_ca_cert_common_name) |
+              selectattr('is_ca', 'equalto', true) |
+              selectattr('has_private_key', 'equalto', true) |
+              list }}
+
+    - name: Fail, if certificate does not exist
+      ansible.builtin.assert:
+        that:
+          - _winca_certs | length > 0
+        fail_msg: "No certificates with the expected common name '{{ winca_ca_cert_common_name }}' are installed."
+        success_msg: "At least one certificate with the expected common name '{{ winca_ca_cert_common_name }}' is installed."
+
+    - name: Get latest expiring certificate
+      ansible.builtin.set_fact:
+        _winca_latest_cert: "{{ _winca_certs | max(attribute='valid_to') }}"
+
+    - name: Set variable, if certificate needs renewal
+      ansible.builtin.set_fact:
+        _winca_cert_id: "{{ _winca_latest_cert.serial_number }}"
+
+- name: Ensure the required NuGet package provider version is installed
+  trippsc2.general.win_package_provider:
+    name: NuGet
+    min_version: '2.8.5.201'
+
+- name: Ensure 'PowerShellGet' PowerShell module is installed and updated
+  community.windows.win_psmodule:
+    name: PowerShellGet
+    accept_license: true
+    state: latest
+
+- name: Ensure 'PackageManagement' PowerShell module is installed and updated
+  community.windows.win_psmodule:
+    name: PackageManagement
+    accept_license: true
+    state: latest
+
+- name: Ensure 'PSGallery' PowerShell repository is enabled and trusted
+  community.windows.win_psrepository:
+    name: PSGallery
+    installation_policy: trusted
+    state: present
+
+- name: Ensure 'ActiveDirectoryCSDsc' PowerShell module is installed
+  community.windows.win_psmodule:
+    name: ActiveDirectoryCSDsc
+    state: present

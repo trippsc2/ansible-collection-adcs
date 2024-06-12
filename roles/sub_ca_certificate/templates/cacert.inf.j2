@@ -1,0 +1,11 @@
+[NewRequest]
+Subject = "CN={{ winsubca_ca_common_name }}{% if winsubca_ca_distinguished_name_suffix is defined %},{{ winsubca_ca_distinguished_name_suffix }}{% endif %}"
+KeyUsage = "CERT_DIGITAL_SIGNATURE_KEY_USAGE | CERT_KEY_CERT_SIGN_KEY_USAGE | CERT_OFFLINE_CRL_SIGN_KEY_USAGE | CERT_CRL_SIGN_KEY_USAGE"
+ProviderName = "Microsoft Software Key Storage Provider"
+Silent = true
+SMIME = false
+UseExistingKeySet = false
+KeyLength = 2048
+
+[Extensions]
+2.5.29.19 = "{critical}{text}ca=1&pathlength=0"

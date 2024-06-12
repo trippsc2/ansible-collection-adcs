@@ -1,0 +1,274 @@
+---
+- name: Verify standalone root CA
+  hosts:
+    - srootca
+  gather_facts: false
+  tasks:
+    - name: Check Windows Feature is installed
+      check_mode: true
+      ansible.windows.win_feature:
+        name: Adcs-Cert-Authority
+        state: present
+      register: _winca_feature_installed
+
+    - name: Test result
+      ansible.builtin.assert:
+        that:
+          - not _winca_feature_installed.changed
+        fail_msg: The AD CS Certification Authority feature is not installed
+        success_msg: The AD CS Certification Authority feature is installed
+
+    - name: Ensure Certification Authority is installed
+      check_mode: true
+      ansible.windows.win_dsc:
+        resource_name: AdcsCertificationAuthority
+        IsSingleInstance: 'Yes'
+        CAType: StandaloneRootCA
+        Ensure: Present
+        Credential_username: "{{ winca_username }}"
+        Credential_password: "{{ winca_password }}"
+        CACommonName: "{{ winca_ca_cert_common_name }}"
+        CADistinguishedNameSuffix: "{{ winca_ca_distinguished_name_suffix }}"
+        CryptoProviderName: "{{ winca_crypto_provider_name }}"
+        DatabaseDirectory: "{{ winca_database_directory }}"
+        HashAlgorithmName: "{{ winca_hash_algorithm_name }}"
+        KeyLength: "{{ winca_key_length }}"
+        LogDirectory: "{{ winca_log_directory }}"
+        ValidityPeriod: "{{ winca_ca_cert_validity_period_unit }}"
+        ValidityPeriodUnits: "{{ winca_ca_cert_validity_period }}"
+      register: _winca_ca_installed
+
+    - name: Test result
+      ansible.builtin.assert:
+        that: 
+          - not _winca_feature_installed.changed
+        fail_msg: The AD CS Certification Authority is not installed
+        success_msg: The AD CS Certification Authority is installed
+
+    - name: Ensure Certification Authority Settings are applied
+      check_mode: true
+      ansible.windows.win_dsc:
+        resource_name: AdcsCertificationAuthoritySettings
+        IsSingleInstance: 'Yes'
+        CACertPublicationURLs: "{{ winca_ca_cert_publication_urls }}"
+        CRLPublicationURLs: "{{ winca_crl_publication_urls }}"
+        ValidityPeriodUnits: "{{ winca_issued_cert_validity_period }}"
+        ValidityPeriod: "{{ winca_issued_cert_validity_period_unit }}"
+        DSConfigDN: "{{ winca_ad_config_distinguished_name }}"
+        DSDomainDN: "{{ winca_ad_base_distinguished_name }}"
+        AuditFilter: "{{ winca_audit_filter }}"
+        CRLOverlapUnits: "{{ winca_crl_overlap_period }}"
+        CRLOverlapPeriod: "{{ winca_crl_overlap_period_unit }}"
+        CRLPeriodUnits: "{{ winca_crl_period }}"
+        CRLPeriod: "{{ winca_crl_period_unit }}"
+      register: _winca_ca_settings_applied
+
+    - name: Test result
+      ansible.builtin.assert:
+        that:
+          - not _winca_ca_settings_applied.changed
+        fail_msg: The AD CS Certification Authority settings are not applied
+        success_msg: The AD CS Certification Authority settings are applied
+
+- name: Verify enterprise root CA
+  hosts:
+    - erootca
+  gather_facts: false
+  tasks:
+    - name: Check Windows Feature is installed
+      check_mode: true
+      ansible.windows.win_feature:
+        name: Adcs-Cert-Authority
+        state: present
+      register: _winca_feature_installed
+
+    - name: Test result
+      ansible.builtin.assert:
+        that:
+          - not _winca_feature_installed.changed
+        fail_msg: The AD CS Certification Authority feature is not installed
+        success_msg: The AD CS Certification Authority feature is installed
+
+    - name: Ensure Certification Authority is installed
+      check_mode: true
+      ansible.windows.win_dsc:
+        resource_name: AdcsCertificationAuthority
+        IsSingleInstance: 'Yes'
+        CAType: EnterpriseRootCA
+        Ensure: Present
+        Credential_username: "{{ winca_username }}"
+        Credential_password: "{{ winca_password }}"
+        CACommonName: "{{ winca_ca_cert_common_name }}"
+        CADistinguishedNameSuffix: "{{ winca_ca_distinguished_name_suffix }}"
+        CryptoProviderName: "{{ winca_crypto_provider_name }}"
+        DatabaseDirectory: "{{ winca_database_directory }}"
+        HashAlgorithmName: "{{ winca_hash_algorithm_name }}"
+        KeyLength: "{{ winca_key_length }}"
+        LogDirectory: "{{ winca_log_directory }}"
+        ValidityPeriod: "{{ winca_ca_cert_validity_period_unit }}"
+        ValidityPeriodUnits: "{{ winca_ca_cert_validity_period }}"
+      register: _winca_ca_installed
+
+    - name: Test result
+      ansible.builtin.assert:
+        that: 
+          - not _winca_feature_installed.changed
+        fail_msg: The AD CS Certification Authority is not installed
+        success_msg: The AD CS Certification Authority is installed
+
+    - name: Ensure Certification Authority Settings are applied
+      check_mode: true
+      ansible.windows.win_dsc:
+        resource_name: AdcsCertificationAuthoritySettings
+        IsSingleInstance: 'Yes'
+        CACertPublicationURLs: "{{ winca_ca_cert_publication_urls }}"
+        CRLPublicationURLs: "{{ winca_crl_publication_urls }}"
+        ValidityPeriodUnits: "{{ winca_issued_cert_validity_period }}"
+        ValidityPeriod: "{{ winca_issued_cert_validity_period_unit }}"
+        DSConfigDN: "{{ winca_ad_config_distinguished_name }}"
+        DSDomainDN: "{{ winca_ad_base_distinguished_name }}"
+        AuditFilter: "{{ winca_audit_filter }}"
+        CRLOverlapUnits: "{{ winca_crl_overlap_period }}"
+        CRLOverlapPeriod: "{{ winca_crl_overlap_period_unit }}"
+        CRLPeriodUnits: "{{ winca_crl_period }}"
+        CRLPeriod: "{{ winca_crl_period_unit }}"
+      register: _winca_ca_settings_applied
+
+    - name: Test result
+      ansible.builtin.assert:
+        that:
+          - not _winca_ca_settings_applied.changed
+        fail_msg: The AD CS Certification Authority settings are not applied
+        success_msg: The AD CS Certification Authority settings are applied
+
+- name: Verify standalone subordinate CA
+  hosts:
+    - ssubca
+  gather_facts: false
+  tasks:
+    - name: Check Windows Feature is installed
+      check_mode: true
+      ansible.windows.win_feature:
+        name: Adcs-Cert-Authority
+        state: present
+      register: _winca_feature_installed
+
+    - name: Test result
+      ansible.builtin.assert:
+        that:
+          - not _winca_feature_installed.changed
+        fail_msg: The AD CS Certification Authority feature is not installed
+        success_msg: The AD CS Certification Authority feature is installed
+
+    - name: Ensure Certification Authority is installed
+      check_mode: true
+      ansible.windows.win_dsc:
+        resource_name: AdcsCertificationAuthority
+        IsSingleInstance: 'Yes'
+        CAType: StandaloneSubordinateCA
+        Ensure: Present
+        Credential_username: "{{ winca_username }}"
+        Credential_password: "{{ winca_password }}"
+        DatabaseDirectory: "{{ winca_database_directory }}"
+        LogDirectory: "{{ winca_log_directory }}"
+        ValidityPeriod: "{{ winca_ca_cert_validity_period_unit }}"
+        ValidityPeriodUnits: "{{ winca_ca_cert_validity_period }}"
+      register: _winca_ca_installed
+
+    - name: Test result
+      ansible.builtin.assert:
+        that: 
+          - not _winca_feature_installed.changed
+        fail_msg: The AD CS Certification Authority is not installed
+        success_msg: The AD CS Certification Authority is installed
+
+    - name: Ensure Certification Authority Settings are applied
+      check_mode: true
+      ansible.windows.win_dsc:
+        resource_name: AdcsCertificationAuthoritySettings
+        IsSingleInstance: 'Yes'
+        CACertPublicationURLs: "{{ winca_ca_cert_publication_urls }}"
+        CRLPublicationURLs: "{{ winca_crl_publication_urls }}"
+        ValidityPeriodUnits: "{{ winca_issued_cert_validity_period }}"
+        ValidityPeriod: "{{ winca_issued_cert_validity_period_unit }}"
+        DSConfigDN: "{{ winca_ad_config_distinguished_name }}"
+        DSDomainDN: "{{ winca_ad_base_distinguished_name }}"
+        AuditFilter: "{{ winca_audit_filter }}"
+        CRLOverlapUnits: "{{ winca_crl_overlap_period }}"
+        CRLOverlapPeriod: "{{ winca_crl_overlap_period_unit }}"
+        CRLPeriodUnits: "{{ winca_crl_period }}"
+        CRLPeriod: "{{ winca_crl_period_unit }}"
+      register: _winca_ca_settings_applied
+
+    - name: Test result
+      ansible.builtin.assert:
+        that:
+          - not _winca_ca_settings_applied.changed
+        fail_msg: The AD CS Certification Authority settings are not applied
+        success_msg: The AD CS Certification Authority settings are applied
+
+- name: Verify enterprise subordinate CA
+  hosts:
+    - esubca
+  gather_facts: false
+  tasks:
+    - name: Check Windows Feature is installed
+      check_mode: true
+      ansible.windows.win_feature:
+        name: Adcs-Cert-Authority
+        state: present
+      register: _winca_feature_installed
+
+    - name: Test result
+      ansible.builtin.assert:
+        that:
+          - not _winca_feature_installed.changed
+        fail_msg: The AD CS Certification Authority feature is not installed
+        success_msg: The AD CS Certification Authority feature is installed
+
+    - name: Ensure Certification Authority is installed
+      check_mode: true
+      ansible.windows.win_dsc:
+        resource_name: AdcsCertificationAuthority
+        IsSingleInstance: 'Yes'
+        CAType: EnterpriseSubordinateCA
+        Ensure: Present
+        Credential_username: "{{ winca_username }}"
+        Credential_password: "{{ winca_password }}"
+        DatabaseDirectory: "{{ winca_database_directory }}"
+        LogDirectory: "{{ winca_log_directory }}"
+        ValidityPeriod: "{{ winca_ca_cert_validity_period_unit }}"
+        ValidityPeriodUnits: "{{ winca_ca_cert_validity_period }}"
+      register: _winca_ca_installed
+
+    - name: Test result
+      ansible.builtin.assert:
+        that: 
+          - not _winca_feature_installed.changed
+        fail_msg: The AD CS Certification Authority is not installed
+        success_msg: The AD CS Certification Authority is installed
+
+    - name: Ensure Certification Authority Settings are applied
+      check_mode: true
+      ansible.windows.win_dsc:
+        resource_name: AdcsCertificationAuthoritySettings
+        IsSingleInstance: 'Yes'
+        CACertPublicationURLs: "{{ winca_ca_cert_publication_urls }}"
+        CRLPublicationURLs: "{{ winca_crl_publication_urls }}"
+        ValidityPeriodUnits: "{{ winca_issued_cert_validity_period }}"
+        ValidityPeriod: "{{ winca_issued_cert_validity_period_unit }}"
+        DSConfigDN: "{{ winca_ad_config_distinguished_name }}"
+        DSDomainDN: "{{ winca_ad_base_distinguished_name }}"
+        AuditFilter: "{{ winca_audit_filter }}"
+        CRLOverlapUnits: "{{ winca_crl_overlap_period }}"
+        CRLOverlapPeriod: "{{ winca_crl_overlap_period_unit }}"
+        CRLPeriodUnits: "{{ winca_crl_period }}"
+        CRLPeriod: "{{ winca_crl_period_unit }}"
+      register: _winca_ca_settings_applied
+
+    - name: Test result
+      ansible.builtin.assert:
+        that:
+          - not _winca_ca_settings_applied.changed
+        fail_msg: The AD CS Certification Authority settings are not applied
+        success_msg: The AD CS Certification Authority settings are applied

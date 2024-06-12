@@ -1,0 +1,3 @@
+---
+- name: Include Linux tasks
+  ansible.builtin.include_tasks: linux.yml

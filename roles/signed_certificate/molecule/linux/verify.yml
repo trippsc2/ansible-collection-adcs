@@ -1,0 +1,60 @@
+---
+- name: Verify
+  hosts:
+    - subjects
+  tasks:
+    - name: Set file path variables | Debian-based
+      when:
+        - ansible_os_family == 'Debian'
+      ansible.builtin.set_fact:
+        _private_key_path: /etc/ssl/private/cert.key
+        _certificate_path: /etc/ssl/certs/cert.crt
+
+    - name: Set file path variables | RedHat-based
+      when:
+        - ansible_os_family == 'RedHat'
+      ansible.builtin.set_fact:
+        _private_key_path: /etc/pki/tls/private/cert.key
+        _certificate_path: /etc/pki/tls/certs/cert.crt
+
+    - name: Get private key file info
+      ansible.builtin.stat:
+        path: "{{ _private_key_path }}"
+      register: _private_key_info
+
+    - name: Get certificate file info
+      ansible.builtin.stat:
+        path: "{{ _certificate_path }}"
+      register: _certificate_info
+
+    - name: Get CSR file info
+      ansible.builtin.stat:
+        path: /tmp/cert.csr
+      register: _csr_info
+
+    - name: Assert that private key info is expected
+      ansible.builtin.assert:
+        that:
+          - _private_key_info.stat.exists
+          - _private_key_info.stat.pw_name == 'root'
+          - _private_key_info.stat.gr_name == 'root'
+          - _private_key_info.stat.mode == '0600'
+        fail_msg: Private key file does not exist or has incorrect permissions
+        success_msg: Private key file exists and has correct permissions
+
+    - name: Assert that certificate info is expected
+      ansible.builtin.assert:
+        that:
+          - _certificate_info.stat.exists
+          - _certificate_info.stat.pw_name == 'root'
+          - _certificate_info.stat.gr_name == 'root'
+          - _certificate_info.stat.mode == '0644'
+        fail_msg: Certificate file does not exist or has incorrect permissions
+        success_msg: Certificate file exists and has correct permissions
+
+    - name: Assert that CSR file is not present
+      ansible.builtin.assert:
+        that:
+          - not _csr_info.stat.exists
+        fail_msg: CSR file still exists
+        success_msg: CSR file does not exist, as expected

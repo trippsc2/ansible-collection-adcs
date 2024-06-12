@@ -1,0 +1,22 @@
+---
+namespace: trippsc2
+name: adcs
+version: '1.0.0'
+readme: README.md
+authors:
+  - Jim Tarpley
+description: This collection contains modules and roles for configuring Active Directory Certificate Services.
+
+license_file: 'LICENSE'
+
+tags: []
+
+dependencies:
+  ansible.windows: ">=1.0.0"
+  community.windows: ">=1.11.0"
+  trippsc2.general: ">=2.1.0"
+
+repository: https://github.com/trippsc2/ansible-collection-adcs.git
+
+build_ignore:
+  - .gitignore

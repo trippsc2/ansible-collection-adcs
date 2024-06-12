@@ -1,0 +1,37 @@
+---
+- name: Install IIS CertEnroll virtual directory
+  when:
+    - winca_add_certenroll_virtual_directory
+  block:
+    - name: Install IIS role
+      ansible.windows.win_feature:
+        name:
+          - Web-Default-Doc
+          - Web-Dir-Browsing
+          - Web-Http-Errors
+          - Web-Static-Content
+          - Web-Http-Redirect
+          - Web-Http-Logging
+          - Web-Log-Libraries
+          - Web-Request-Monitor
+          - Web-Http-Tracing
+          - Web-Stat-Compression
+          - Web-Windows-Auth
+          - Web-ISAPI-Ext
+          - Web-Mgmt-Console
+          - Web-Metabase
+        state: present
+        include_management_tools: true
+      register: _winca_iis_installed
+
+    - name: Reboot, if needed
+      when:
+        - _winca_iis_installed.reboot_required
+      ansible.windows.win_reboot:
+    
+    - name: Install CertEnroll virtual directory
+      community.windows.win_iis_virtualdirectory:
+        site: Default Web Site
+        physical_path: C:\Windows\system32\CertSrv\CertEnroll
+        name: CertEnroll
+        state: present

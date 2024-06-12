@@ -1,0 +1,6 @@
+---
+winca_is_root_ca: true
+
+winca_crypto_provider_name: RSA#Microsoft Software Key Storage Provider
+winca_hash_algorithm_name: sha256
+winca_key_length: 2048

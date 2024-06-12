@@ -1,0 +1,9 @@
+---
+winca_install_management_tools: true
+
+winca_is_root_ca: true
+winca_is_ad_integrated: false
+
+winca_username: vagrant
+winca_password: vagrant
+winca_ca_cert_common_name: RootCA

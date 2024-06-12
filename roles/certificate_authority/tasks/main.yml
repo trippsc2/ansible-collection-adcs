@@ -1,0 +1,12 @@
+---
+- name: Prepare
+  ansible.builtin.import_tasks: prepare.yml
+
+- name: Install Certification Authority
+  ansible.builtin.import_tasks: install-ca.yml
+
+- name: Install IIS CertEnroll virtual directory
+  ansible.builtin.import_tasks: config-iis.yml
+
+- name: Configure Certification Authority
+  ansible.builtin.import_tasks: config-ca.yml

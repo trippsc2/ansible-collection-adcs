@@ -1,0 +1,39 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+  cachier: machine
+  parallel: true
+platforms:
+  - name: dc
+    box: jtarpley/${MOLECULE_OS:-w2022}_cis
+    memory: 2048
+    cpus: 2
+  - name: srootca
+    box: jtarpley/${MOLECULE_OS:-w2022}_cis
+    memory: 2048
+    cpus: 2
+  - name: ssubca
+    box: jtarpley/${MOLECULE_OS:-w2022}_cis
+    memory: 2048
+    cpus: 2
+  - name: erootca
+    box: jtarpley/${MOLECULE_OS:-w2022}_cis
+    memory: 2048
+    cpus: 2
+  - name: esubca
+    box: jtarpley/${MOLECULE_OS:-w2022}_cis
+    memory: 2048
+    cpus: 2
+provisioner:
+  name: ansible
+  inventory:
+    links:
+      hosts: ./hosts
+      host_vars: ./host_vars/
+      group_vars: ./group_vars/
+verifier:
+  name: ansible

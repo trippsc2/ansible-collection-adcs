@@ -1,0 +1,5 @@
+---
+winca_crl_publication_urls:
+  - 65:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl
+  - 6:http://srootca.test.loc/CertEnroll/%3%8%9.crl
+  - 6:file://srootca.test.loc/CertEnroll/%3%8%9.crl

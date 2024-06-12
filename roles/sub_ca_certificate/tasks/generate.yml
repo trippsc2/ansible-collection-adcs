@@ -1,0 +1,115 @@
+---
+- name: Create certreq inf file from template
+  ansible.windows.win_template:
+    dest: "{{ winsubca_request_config_file_temp_path }}"
+    src: cacert.inf.j2
+
+- name: Remove existing CSR file
+  ansible.windows.win_file:
+    path: "{{ winsubca_request_file_temp_path }}"
+    state: absent
+
+- name: Create CSR with certreq
+  ansible.windows.win_shell: |
+    certreq.exe -new -machine -q {{ winsubca_request_config_file_temp_path }} {{ winsubca_request_file_temp_path }}
+
+- name: Get CSR contents
+  ansible.windows.slurp:
+    src: "{{ winsubca_request_file_temp_path }}"
+  register: _winsubca_request_content
+
+- name: Remove certreq inf file
+  ansible.windows.win_file:
+    path: "{{ winsubca_request_config_file_temp_path }}"
+    state: absent
+
+- name: Remove CSR file
+  ansible.windows.win_file:
+    path: "{{ winsubca_request_file_temp_path }}"
+    state: absent
+
+- name: Access the root CA to sign CSR
+  delegate_to: "{{ winsubca_signing_ca_hostname }}"
+  block:
+    - name: Transfer CSR to root CA
+      ansible.windows.win_copy:
+        content: "{{ _winsubca_request_content.content | b64decode }}"
+        dest: "{{ winsubca_request_file_temp_path }}"
+
+    - name: Get FQDN fact
+      delegate_facts: true
+      ansible.builtin.setup:
+        filter:
+          - ansible_fqdn
+
+    - name: Submit CSR to CA
+      ansible.windows.win_shell: |
+        certreq.exe -submit -q -config "{{ winsubca_signing_ca_config }}" {{ winsubca_request_file_temp_path }}
+      changed_when: true
+      register: _winsubca_csr_submit
+
+    - name: Set Request ID to fact
+      ansible.builtin.set_fact:
+        _winsubca_request_id: '{{ _winsubca_csr_submit.stdout | regex_search("^RequestId:\s+\d+") | regex_replace("RequestId: ") }}'
+    
+    - name: Accept certificate request
+      ansible.windows.win_shell: |
+        certutil.exe -config "{{ winsubca_signing_ca_config }}" -resubmit {{ _winsubca_request_id }}
+      changed_when: true
+
+    - name: Get signed certificate content
+      ansible.windows.win_shell: |
+        certutil.exe -config "{{ winsubca_signing_ca_config }}" -view -restrict "requestid={{ _winsubca_request_id }}" -out rawcertificate
+      changed_when: false
+      register: _winsubca_signed_cert
+
+    - name: Remove CSR file
+      ansible.windows.win_file:
+        path: "{{ winsubca_request_file_temp_path }}"
+        state: absent
+
+    - name: Get root certificate file contents
+      ansible.windows.slurp:
+        src: "{{ winsubca_rootca_file_path }}"
+      register: _winsubca_signing_ca_cert
+
+- name: Copy root CA cert to server
+  ansible.windows.win_copy:
+    content: "{{ _winsubca_signing_ca_cert.content | b64decode }}"
+    dest: "{{ winsubca_signing_ca_cert_file_temp_path }}"
+
+- name: Install the root CA certificate
+  ansible.windows.win_certificate_store:
+    file_type: der
+    path: "{{ winsubca_signing_ca_cert_file_temp_path }}"
+    store_name: Root
+    state: present
+
+- name: Remove root CA cert file
+  ansible.windows.win_file:
+    path: "{{ winsubca_signing_ca_cert_file_temp_path }}"
+    state: absent
+
+- name: Set signed certificate content to variable
+  when:
+    - lookup('ansible.utils.index_of', _winsubca_signed_cert.stdout_lines, 'eq', item) | type_debug != 'list'
+    - lookup('ansible.utils.index_of', _winsubca_signed_cert.stdout_lines, 'eq', item) >= lookup('ansible.utils.index_of', _winsubca_signed_cert.stdout_lines, 'eq', '-----BEGIN CERTIFICATE-----')
+    - lookup('ansible.utils.index_of', _winsubca_signed_cert.stdout_lines, 'eq', item) <= lookup('ansible.utils.index_of', _winsubca_signed_cert.stdout_lines, 'eq', '-----END CERTIFICATE-----')
+  ansible.builtin.set_fact:
+    _winsubca_signed_cert_content: "{{ _winsubca_signed_cert_content | default('') }}{{ item }}{{ winsubca_cert_line_break_character }}"
+  loop: "{{ _winsubca_signed_cert.stdout_lines }}"
+
+- name: Transfer signed certificate to subordinate CA
+  ansible.windows.win_copy:
+    content: "{{ _winsubca_signed_cert_content }}"
+    dest: "{{ winsubca_cert_file_temp_path }}"
+
+- name: Install signed certificate
+  ansible.windows.win_shell: |
+    certreq.exe -accept -q -machine {{ winsubca_cert_file_temp_path }}
+  changed_when: true
+
+- name: Remove certificate file
+  ansible.windows.win_file:
+    path: "{{ winsubca_cert_file_temp_path }}"
+    state: absent

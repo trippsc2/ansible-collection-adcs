@@ -1,0 +1,25 @@
+---
+- name: Verify
+  hosts:
+    - subjects
+  tasks:
+    - name: Get certificate store
+      community.windows.win_certificate_info:
+        store_name: My
+      register: _winsubca_cert_store
+
+    - name: Filter to only expected certificate
+      ansible.builtin.set_fact:
+        _winsubca_cert_exists: >-
+          {{ _winsubca_cert_store.certificates |
+              selectattr('subject', 'contains', 'CN=' + winsubca_ca_common_name) |
+              selectattr('is_ca', 'equalto', true) |
+              selectattr('has_private_key', 'equalto', true) |
+              list }}
+
+    - name: Fail if certificate not found
+      ansible.builtin.assert:
+        that:
+          - _winsubca_cert_exists | length > 0
+        fail_msg: Certificate not found
+        success_msg: Certificate found

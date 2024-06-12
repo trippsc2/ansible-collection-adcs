@@ -1,0 +1,32 @@
+---
+- name: Ensure non-CRL Certification Authority Settings are applied
+  ansible.windows.win_dsc:
+    resource_name: AdcsCertificationAuthoritySettings
+    IsSingleInstance: 'Yes'
+    CACertPublicationURLs: "{{ winca_ca_cert_publication_urls | default(omit) }}"
+    CRLPublicationURLs: "{{ winca_crl_publication_urls | default(omit) }}"
+    ValidityPeriodUnits: "{{ winca_issued_cert_validity_period | default(omit) }}"
+    ValidityPeriod: "{{ winca_issued_cert_validity_period_unit | default(omit) }}"
+    DSConfigDN: "{{ winca_ad_config_distinguished_name | default(omit) }}"
+    DSDomainDN: "{{ winca_ad_base_distinguished_name | default(omit) }}"
+    AuditFilter: "{{ winca_audit_filter | default(omit) }}"
+  notify:
+    - _winca_restart_certsvc
+
+- name: Flush all handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure CRL Certification Authority Settings are applied
+  ansible.windows.win_dsc:
+    resource_name: AdcsCertificationAuthoritySettings
+    IsSingleInstance: "Yes"
+    CRLOverlapUnits: "{{ winca_crl_overlap_period | default(omit) }}"
+    CRLOverlapPeriod: "{{ winca_crl_overlap_period_unit | default(omit) }}"
+    CRLPeriodUnits: "{{ winca_crl_period | default(omit) }}"
+    CRLPeriod: "{{ winca_crl_period_unit | default(omit) }}"
+  notify:
+    - _winca_restart_certsvc
+    - _winca_republish_crl
+
+- name: Flush all handlers
+  ansible.builtin.meta: flush_handlers

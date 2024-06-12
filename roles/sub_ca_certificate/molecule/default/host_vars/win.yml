@@ -1,0 +1,6 @@
+---
+winsubca_ca_common_name: SubCA
+winsubca_ca_distinguished_name_suffix: DC=test,DC=local
+winsubca_signing_ca_hostname: rootca
+winsubca_signing_ca_fqdn: rootca
+winsubca_signing_ca_common_name: RootCA

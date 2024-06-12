@@ -1,0 +1,68 @@
+---
+- name: Include OS family variables
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Get contents of CSR
+  become: true
+  ansible.builtin.slurp:
+    src: "{{ cert_csr_tmp_path }}"
+  failed_when: false
+  register: _cert_csr
+
+- name: Sign certificate
+  when:
+    - _cert_csr.content is defined
+  block:
+    - name: Gather CA facts
+      delegate_to: "{{ cert_signing_ca_hostname }}"
+      delegate_facts: true
+      ansible.builtin.setup:
+        filter:
+          - ansible_fqdn
+
+    - name: Sign certificate with AD CA
+      delegate_to: "{{ cert_signing_ca_hostname }}"
+      block:
+        - name: Transfer CSR to signing CA
+          ansible.windows.win_copy:
+            content: "{{ _cert_csr.content | b64decode }}"
+            dest: "{{ cert_signing_ca_csr_path }}"
+
+        - name: Submit CSR to signing CA
+          ansible.windows.win_shell: |
+            certreq.exe -submit -q -config "{{ cert_signing_ca_config }}" {{ cert_signing_ca_csr_path }}
+          register: _cert_csr_submit
+
+        - name: Set Request ID to variable
+          ansible.builtin.set_fact:
+            _cert_request_id: '{{ _cert_csr_submit.stdout | regex_search("^RequestId:\s+\d+") | regex_replace("RequestId: ") }}'
+
+        - name: Accept certificate request
+          ansible.windows.win_shell: |
+            certutil.exe -config "{{ cert_signing_ca_config }}" -resubmit {{ _cert_request_id }}
+
+        - name: Get signed certificate content
+          ansible.windows.win_shell: |
+            certutil.exe -config "{{ cert_signing_ca_config }}" -view -restrict "requestid={{ _cert_request_id }}" -out rawcertificate
+          register: _cert_raw_signed_cert
+
+        - name: Remove CSR file from signing CA
+          ansible.windows.win_file:
+            path: "{{ cert_signing_ca_csr_path }}"
+            state: absent
+
+    - name: Set signed certificate content to variable
+      loop: "{{ _cert_raw_signed_cert.stdout_lines }}"
+      when:
+        - lookup('ansible.utils.index_of', _cert_raw_signed_cert.stdout_lines, 'eq', item) | type_debug != 'list'
+        - >-
+          lookup('ansible.utils.index_of', _cert_raw_signed_cert.stdout_lines, 'eq', item) >= 
+          lookup('ansible.utils.index_of', _cert_raw_signed_cert.stdout_lines, 'eq', '-----BEGIN CERTIFICATE-----')
+        - >-
+          lookup('ansible.utils.index_of', _cert_raw_signed_cert.stdout_lines, 'eq', item) <=
+          lookup('ansible.utils.index_of', _cert_raw_signed_cert.stdout_lines, 'eq', '-----END CERTIFICATE-----')
+      ansible.builtin.set_fact:
+        _cert_signed_cert_content: "{{ _cert_signed_cert_content | default('') }}{{ item }}{{ cert_line_break_character }}"
+
+    - name: Include OS family tasks
+      ansible.builtin.include_tasks: "{{ ansible_os_family }}.yml"

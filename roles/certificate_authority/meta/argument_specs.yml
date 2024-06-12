@@ -1,0 +1,272 @@
+---
+argument_specs:
+  main:
+    short_description: Active Directory Certificate Services Certification Authority
+    description:
+      - This role installs and configures a Windows machine as a Active Directory Certificate Services Certification Authority.
+    author:
+      - Jim Tarpley
+    options:
+      winca_is_root_ca:
+        type: bool
+        required: false
+        default: true
+        description:
+          - Whether to install the Certificate Authority as a Root CA.
+      winca_is_ad_integrated:
+        type: bool
+        required: false
+        default: false
+        description:
+          - Whether to integrate the Certificate Authority with Active Directory.
+          - If `true`, the system must be joined to an Active Directory domain and the account used must be an Enterprise Admin.
+      winca_certificate_type:
+        type: str
+        required: false
+        default: existing
+        choices:
+          - existing
+          - enterprise_parent
+        description:
+          - The type of CA certificate.
+          - If `winca_is_root_ca` is set to `true` or `winca_is_ad_integrated` is set to `false`, this is ignored.
+          - If set to `existing`, an existing CA certificate matching `winca_ca_cert_common_name` is used.
+          - If set to `enterprise_parent`, a new CA certificate is generated and signed by the parent.
+      winca_install_management_tools:
+        type: bool
+        required: false
+        default: true
+        description:
+          - Whether to install the Remote Server Administration Tools (RSAT) for Certificate Authority feature.
+      winca_username:
+        type: str
+        required: true
+        description:
+          - The username to use when installing the Certificate Authority.
+          - This account must have administrative rights on the target system.
+          - If `winca_is_ad_integrated` is `true`, this account must be an Enterprise Admin.
+      winca_password:
+        type: str
+        required: true
+        no_log: true
+        description:
+          - The password for the `winca_username` account.
+      winca_ca_cert_common_name:
+        type: str
+        required: true
+        description:
+          - The common name for the Certificate Authority certificate.
+          - If `winca_is_root_ca` is set to `true`, this is the common name for the generated Root CA certificate.
+          - If `winca_is_root_ca` is set to `false` and either `winca_is_ad_integrated` is set to `false` or `winca_certificate_type` is set to `existing`, this is used to lookup the existing CA certificate by common name.
+          - If `winca_is_root_ca` is set to `false`, `winca_is_ad_integrated` is set to `true`, and `winca_certificate_type` is set to `enterprise_parent`, this is used as the CA certificate common name to be signed by the parent.
+      winca_ca_distinguished_name_suffix:
+        type: str
+        required: false
+        description:
+          - The distinguished name suffix for the Certificate Authority.
+          - If `winca_is_root_ca` is set to `true`, this is the distinguished name suffix for the generated Root CA certificate.
+          - If `winca_is_root_ca` is set to `false`, `winca_is_ad_integrated` is set to `true`, and `winca_certificate_type` is set to `enterprise_parent`, this is used as the CA certificate distinguished name suffix to be signed by the parent.
+      winca_crypto_provider_name:
+        type: str
+        required: false
+        default: RSA#Microsoft Software Key Storage Provider
+        description:
+          - The cryptographic provider name to use when generating the CA key pair.
+          - This is only used when `winca_is_root_ca` is set to `true` or `winca_certificate_type` is set to `enterprise_parent`.
+      winca_database_directory:
+        type: str
+        required: false
+        default: C:\Windows\system32\CertLog
+        description:
+          - The directory to store the Certificate Authority database.
+      winca_hash_algorithm_name:
+        type: str
+        required: false
+        default: sha256
+        choices:
+          - sha256
+          - sha3_256
+          - sha3_384
+          - sha3_512
+          - sha384
+          - sha512
+        description:
+          - The hash algorithm name to use when generating the CA key pair.
+          - This is only used when `winca_is_root_ca` is set to `true` or `winca_certificate_type` is set to `enterprise_parent`.
+      winca_ignore_unicode:
+        type: bool
+        required: false
+        default: false
+        description:
+          - Whether to ignore Unicode characters in the distinguished name.
+          - This is only used when `winca_is_root_ca` is set to `true` or `winca_certificate_type` is set to `enterprise_parent`.
+      winca_key_length:
+        type: int
+        required: false
+        default: 2048
+        description:
+          - The key length to use when generating the CA key pair.
+          - This is only used when `winca_is_root_ca` is set to `true` or `winca_certificate_type` is set to `enterprise_parent`.
+      winca_overwrite_existing_ca_in_domain:
+        type: bool
+        required: false
+        default: false
+        description:
+          - Whether to overwrite the existing Certificate Authority in the domain.
+          - This is only used when `winca_is_ad_integrated` is set to `true`.
+      winca_overwrite_existing_database:
+        type: bool
+        required: false
+        default: false
+        description:
+          - Whether to overwrite the existing Certificate Authority database.
+      winca_overwrite_existing_key:
+        type: bool
+        required: false
+        default: false
+        description:
+          - Whether to overwrite the existing CA key pair.
+          - This is only used when `winca_is_root_ca` is set to `true`.
+      winca_ca_cert_validity_period:
+        type: int
+        required: false
+        default: 5
+        description:
+          - The validity period for the CA certificate.
+          - This is only used when `winca_is_root_ca` is set to `true`.
+      winca_ca_cert_validity_period_unit:
+        type: str
+        required: false
+        default: Years
+        choices:
+          - Hours
+          - Days
+          - Weeks
+          - Months
+          - Years
+        description:
+          - The validity period unit for the CA certificate.
+          - This is only used when `winca_is_root_ca` is set to `true`.
+      winca_add_certenroll_virtual_directory:
+        type: bool
+        required: false
+        default: false
+        description:
+          - Whether to install Internet Information Services (IIS) and add the CertEnroll virtual directory to the default website.
+          - Installing the Certification Authority Web Enrollment feature handles this for you.
+          - If this is not an offline Root CA, it is recommended to set this to `true` or the Certification Authority Web Enrollment feature is installed and configured.
+      winca_parent_ca_config:
+        type: str
+        required: false
+        description:
+          - The parent CA configuration to use when generating the CA certificate.
+          - This is only used when `winca_certificate_type` is set to `enterprise_parent`.
+          - This should be formatted as `<server-fqdn>\<ca-common-name>`.
+      winca_log_directory:
+        type: str
+        required: false
+        default: C:\Windows\system32\CertLog
+        description:
+          - The directory to store the Certificate Authority log files.
+      winca_ca_cert_publication_urls:
+        type: list
+        required: false
+        elements: str
+        description:
+          - The URLs for the Certificate Authority certificate publication.
+          - 'Refer to this Technet article for formatting: https://social.technet.microsoft.com/wiki/contents/articles/18590.recommended-windows-ca-publication-urls-flags-two-tier-small-scale-internal-cas.aspx'
+      winca_crl_publication_urls:
+        type: list
+        required: false
+        elements: str
+        description:
+          - The URLs for the Certificate Revocation List publication.
+          - 'Refer to this Technet article for formatting: https://social.technet.microsoft.com/wiki/contents/articles/18590.recommended-windows-ca-publication-urls-flags-two-tier-small-scale-internal-cas.aspx'
+      winca_issued_cert_validity_period:
+        type: int
+        required: false
+        default: 5
+        description:
+          - The maximum validity period for issued certificates.
+      winca_issued_cert_validity_period_unit:
+        type: str
+        required: false
+        default: Years
+        choices:
+          - Hours
+          - Days
+          - Weeks
+          - Months
+          - Years
+        description:
+          - The maximum validity period unit for issued certificates.
+      winca_ad_config_distinguished_name:
+        type: str
+        required: false
+        description:
+          - The distinguished name for the Active Directory configuration.
+          - This is must be specified on a Standalone Root CA, if it is meant to sign Enterprise Subordinate CA certificates.
+      winca_ad_base_distinguished_name:
+        type: str
+        required: false
+        description:
+          - The base distinguished name for the Active Directory configuration.
+          - This is must be specified on a Standalone Root CA, if it is meant to sign Enterprise Subordinate CA certificates.
+      winca_audit_filter:
+        type: list
+        elements: str
+        required: false
+        default:
+          - StartAndStopADCS
+          - BackupAndRestoreCADatabase
+          - IssueAndManageCertificateRequests
+          - RevokeCertificatesAndPublishCRLs
+          - ChangeCASecuritySettings
+          - StoreAndRetrieveArchivedKeys
+          - ChangeCAConfiguration
+        choices:
+          - StartAndStopADCS
+          - BackupAndRestoreCADatabase
+          - IssueAndManageCertificateRequests
+          - RevokeCertificatesAndPublishCRLs
+          - ChangeCASecuritySettings
+          - StoreAndRetrieveArchivedKeys
+          - ChangeCAConfiguration
+        description:
+          - The types of event types to log for the Certificate Authority.
+      winca_crl_overlap_period:
+        type: int
+        required: false
+        default: 1
+        description:
+          - The overlap period for the Certificate Revocation List deltas to be published.
+      winca_crl_overlap_period_unit:
+        type: str
+        required: false
+        default: Days
+        choices:
+          - Hours
+          - Days
+          - Weeks
+          - Months
+          - Years
+        description:
+          - The overlap period unit for the Certificate Revocation List deltas to be published.
+      winca_crl_period:
+        type: int
+        required: false
+        default: 1
+        description:
+          - The period for the full Certificate Revocation List to be published.
+      winca_crl_period_unit:
+        type: str
+        required: false
+        default: Days
+        choices:
+          - Hours
+          - Days
+          - Weeks
+          - Months
+          - Years
+        description:
+          - The period unit for the full Certificate Revocation List to be published.

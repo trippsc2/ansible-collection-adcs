@@ -1,0 +1,47 @@
+---
+ansible_shell_type: powershell
+ansible_become_method: runas
+ansible_become_user: SYSTEM
+
+winca_add_certenroll_virtual_directory: true
+
+winca_ca_cert_common_name: "{{ inventory_hostname }}"
+winca_ca_distinguished_name_suffix: DC=test,DC=loc
+
+winca_ad_config_distinguished_name: CN=Configuration,DC=test,DC=loc
+winca_ad_base_distinguished_name: DC=test,DC=loc
+
+winca_database_directory: C:\Windows\system32\CertLog
+winca_log_directory: C:\Windows\system32\CertLog
+
+winca_ca_cert_validity_period: 30
+winca_ca_cert_validity_period_unit: Years
+
+winca_ca_cert_publication_urls:
+  - 1:C:\Windows\system32\CertSrv\CertEnroll\%1_%3%4.crt
+  - 2:ldap:///CN=%7,CN=AIA,CN=Public Key Services,CN=Services,%6%11
+  - 2:http://%1/CertEnroll/%1_%3%4.crt
+  - 2:file://%1/CertEnroll/%1_%3%4.crt
+
+winca_crl_publication_urls:
+  - 65:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl
+  - 6:http://%1/CertEnroll/%3%8%9.crl
+  - 6:file://%1/CertEnroll/%3%8%9.crl
+
+winca_issued_cert_validity_period: 30
+winca_issued_cert_validity_period_unit: Years
+
+winca_crl_overlap_period: 10
+winca_crl_overlap_period_unit: Years
+
+winca_crl_period: 30
+winca_crl_period_unit: Years
+
+winca_audit_filter:
+  - StartAndStopADCS
+  - BackupAndRestoreCADatabase
+  - IssueAndManageCertificateRequests
+  - RevokeCertificatesAndPublishCRLs
+  - ChangeCASecuritySettings
+  - StoreAndRetrieveArchivedKeys
+  - ChangeCAConfiguration

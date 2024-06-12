@@ -1,0 +1,5 @@
+---
+winca_is_ad_integrated: true
+
+winca_username: TEST\vagrant
+winca_password: vagrant

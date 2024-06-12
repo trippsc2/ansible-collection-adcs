@@ -1,0 +1,42 @@
+---
+- name: Get certificate store
+  community.windows.win_certificate_info:
+    store_name: My
+  register: _winsubca_cert_store
+
+- name: Filter to only expected certificate
+  when:
+    - _winsubca_cert_store.exists
+  ansible.builtin.set_fact:
+    _winsubca_certs: >-
+      {{ _winsubca_cert_store.certificates |
+          selectattr('subject', 'contains', 'CN=' + winsubca_ca_common_name) |
+          selectattr('is_ca', 'equalto', true) |
+          selectattr('has_private_key', 'equalto', true) |
+          list }}
+
+- name: Set variable, if certificate does not exist
+  when:
+    - not _winsubca_cert_store.exists or _winsubca_certs | length == 0
+  ansible.builtin.set_fact:
+    _winsubca_generate_cert: true
+
+- name: Check expiration date, if certificate exists
+  when:
+    - _winsubca_cert_store.exists
+    - _winsubca_certs | length > 0
+  block:
+    - name: Get latest expiring certificate
+      ansible.builtin.set_fact:
+        _winsubca_latest_cert: >-
+          {{ _winsubca_certs | max(attribute='valid_to') }}
+
+    - name: Set variable, if certificate needs renewal
+      ansible.builtin.set_fact:
+        _winsubca_generate_cert: >-
+          {{ _winsubca_latest_cert.valid_to - ansible_date_time.epoch | int < winsubca_renewal_days * 86400 }}
+
+- name: Generate certificate, if necessary
+  when:
+    - _winsubca_generate_cert
+  ansible.builtin.include_tasks: generate.yml

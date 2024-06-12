@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts:
+    - subjects
+  pre_tasks:
+    - name: Gathering facts (ca)
+      delegate_to: ca
+      delegate_facts: true
+      ansible.builtin.setup:
+  roles:
+    - role: trippsc2.adcs.signed_certificate

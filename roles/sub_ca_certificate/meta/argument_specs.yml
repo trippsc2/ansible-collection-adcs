@@ -1,0 +1,84 @@
+---
+argument_specs:
+  main:
+    short_description: Active Directory Certificate Services Subordinate Certification Authority Certificate
+    description:
+      - This role signs a subordinate CA certificate on a Windows machine.
+    author: Jim Tarpley
+    options:
+      winsubca_renewal_days:
+        type: int
+        required: false
+        default: 30
+        description:
+          - Number of days before certificate expiration to renew.
+      winsubca_request_config_file_temp_path:
+        type: path
+        required: false
+        default: C:\Windows\temp\cacert.inf
+        description:
+          - Path to store the temporary request configuration file.
+      winsubca_request_file_temp_path:
+        type: path
+        required: false
+        default: C:\Windows\temp\cacert.req
+        description:
+          - Path to store the temporary request file.
+      winsubca_signing_ca_cert_file_temp_path:
+        type: path
+        required: false
+        default: C:\Windows\temp\signingcacert.crt
+        description:
+          - Path to the signing CA certificate file.
+      winsubca_cert_file_temp_path:
+        type: path
+        required: false
+        default: C:\Windows\temp\cacert.crt
+        description:
+          - Path to store the signed certificate file.
+      winsubca_ca_common_name:
+        type: str
+        required: true
+        description:
+          - Common name of the Certificate Authority.
+      winsubca_ca_distinguished_name_suffix:
+        type: str
+        required: true
+        description:
+          - Distinguished name suffix of the Certificate Authority.
+      winsubca_signing_ca_hostname:
+        type: str
+        required: true
+        description:
+          - Ansible inventory hostname of the signing CA.
+      winsubca_signing_ca_fqdn:
+        type: str
+        required: false
+        default: "{{ hostvars[winsubca_signing_ca_hostname].ansible_fqdn }}"
+        description:
+          - Fully qualified domain name of the signing CA.
+          - If `winsubca_signing_ca_config` and `winsubca_rootca_file_path` are provided, this value is ignored.
+      winsubca_signing_ca_common_name:
+        type: str
+        required: false
+        description:
+          - Common name of the signing CA.
+          - If `winsubca_signing_ca_config` and `winsubca_rootca_file_path` are provided, this value is ignored.
+      winsubca_signing_ca_config:
+        type: str
+        required: false
+        default: "{{ winsubca_signing_ca_fqdn }}\\{{ winsubca_signing_ca_common_name }}"
+        description:
+          - Configuration string for the signing CA.
+      winsubca_rootca_file_path:
+        type: path
+        required: false
+        default: "C:\\Windows\\system32\\CertSrv\\CertEnroll\\{{ winsubca_signing_ca_fqdn }}_{{ winsubca_signing_ca_common_name }}.crt"
+        description:
+          - Path to the root CA certificate file.
+      winsubca_cert_line_break_character:
+        type: str
+        required: false
+        default: "\\r\\n"
+        description:
+          - Line break character for the certificate file.

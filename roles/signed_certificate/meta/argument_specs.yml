@@ -1,0 +1,64 @@
+---
+argument_specs:
+  main:
+    short_description: Active Directory Certificate Services Signed Certificate
+    description:
+      - This role issues a certificate from a AD CS Certification Authority.
+    author:
+      - Jim Tarpley
+    options:
+      cert_signing_ca_hostname:
+        type: str
+        required: true
+        description:
+          - The hostname of the Certificate Authority to sign the certificate.
+      cert_signing_ca_csr_path:
+        type: path
+        required: false
+        default: C:\Windows\temp\server.req
+        description:
+          - The path to the Certificate Signing Request (CSR) file to sign.
+      cert_signing_ca_fqdn:
+        type: str
+        required: false
+        default: "{{ hostvars[cert_signing_ca_hostname].ansible_fqdn }}"
+        description:
+          - The Fully Qualified Domain Name (FQDN) of the Certificate Authority to sign the certificate.
+          - This variable is only used if the `cert_signing_ca_config` option is not defined.
+      cert_signing_ca_common_name:
+        type: str
+        required: false
+        description:
+          - The Common Name (CN) of the Certificate Authority to sign the certificate.
+          - This variable is only used if the `cert_signing_ca_config` option is not defined.
+      cert_signing_ca_config:
+        type: str
+        required: false
+        default: "{{ cert_signing_ca_fqdn }}\\{{ cert_signing_ca_common_name }}"
+        description:
+          - The configuration of the Certificate Authority to sign the certificate.
+          - This variable is only used if the `cert_signing_ca_fqdn` and `cert_signing_ca_common_name` options are not defined.
+      cert_line_break_character:
+        type: str
+        required: false
+        default: "\\n"
+        description:
+          - The line break character to use in the certificate.
+      cert_certificate_owner:
+        type: str
+        required: false
+        default: root
+        description:
+          - The owner of the certificate on Linux systems.
+      cert_certificate_group:
+        type: str
+        required: false
+        default: root
+        description:
+          - The group of the certificate on Linux systems.
+      cert_certificate_mode:
+        type: str
+        required: false
+        default: '0644'
+        description:
+          - The mode of the certificate on Linux systems.

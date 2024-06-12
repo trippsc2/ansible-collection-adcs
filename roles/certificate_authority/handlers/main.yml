@@ -1,0 +1,11 @@
+---
+- name: Restart Certification Authority service
+  listen: _winca_restart_certsvc
+  ansible.windows.win_service:
+    name: CertSvc
+    state: restarted
+
+- name: Publish a new Certificate Revocation List
+  listen: _winca_republish_crl
+  ansible.windows.win_command: |
+    certutil.exe -crl

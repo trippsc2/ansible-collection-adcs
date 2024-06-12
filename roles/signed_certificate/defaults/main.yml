@@ -1,0 +1,12 @@
+---
+cert_certificate_path: "{{ _cert_default_certificate_path }}"
+cert_certificate_owner: root
+cert_certificate_group: root
+cert_certificate_mode: '0644'
+
+cert_csr_tmp_path: "{{ _cert_default_csr_tmp_path }}"
+
+cert_signing_ca_fqdn: "{{ hostvars[cert_signing_ca_hostname].ansible_fqdn }}"
+cert_signing_ca_config: "{{ cert_signing_ca_fqdn }}\\{{ cert_signing_ca_common_name }}"
+cert_signing_ca_csr_path: C:\Windows\temp\server.req
+cert_line_break_character: "\n"

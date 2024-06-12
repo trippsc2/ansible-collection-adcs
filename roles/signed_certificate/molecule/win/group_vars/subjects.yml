@@ -1,0 +1,6 @@
+---
+cert_signing_ca_hostname: ca
+cert_signing_ca_fqdn: ca
+cert_signing_ca_common_name: RootCA
+
+cert_signing_ca_csr_path: "C:\\Windows\\Temp\\{{ inventory_hostname }}.csr"

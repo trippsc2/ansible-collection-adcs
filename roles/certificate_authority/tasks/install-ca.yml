@@ -1,0 +1,30 @@
+---
+- name: Ensure Active Directory Certificate Services feature is installed
+  ansible.windows.win_feature:
+    name: Adcs-Cert-Authority
+    include_management_tools: "{{ winca_install_management_tools }}"
+    state: present
+
+- name: Ensure Certification Authority is configured
+  ansible.windows.win_dsc:
+    resource_name: AdcsCertificationAuthority
+    IsSingleInstance: 'Yes'
+    CAType: "{{ _winca_ca_type }}"
+    Ensure: Present
+    Credential_username: "{{ winca_username | default(omit) }}"
+    Credential_password: "{{ winca_password | default(omit) }}"
+    CACommonName: "{{ _winca_ca_cert_common_name }}"
+    CADistinguishedNameSuffix: "{{ _winca_ca_distinguished_name_suffix }}"
+    CertificateID: "{{ _winca_cert_id | default(omit) }}"
+    CryptoProviderName: "{{ _winca_crypto_provider_name }}"
+    DatabaseDirectory: "{{ winca_database_directory | default(omit) }}"
+    HashAlgorithmName: "{{ _winca_hash_algorithm_name }}"
+    IgnoreUnicode: "{{ _winca_ignore_unicode }}"
+    KeyLength: "{{ _winca_key_length }}"
+    ParentCA: "{{ _winca_parent_ca_config }}"
+    LogDirectory: "{{ winca_log_directory | default(omit) }}"
+    OverwriteExistingCAinDS: "{{ _winca_overwrite_existing_ca_in_domain }}"
+    OverwriteExistingDatabase: "{{ winca_overwrite_existing_database | default(omit) }}"
+    OverwriteExistingKey: "{{ _winca_overwrite_existing_key }}"
+    ValidityPeriod: "{{ _winca_ca_cert_validity_period_unit }}"
+    ValidityPeriodUnits: "{{ _winca_ca_cert_validity_period }}"

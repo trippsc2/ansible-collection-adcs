@@ -1,0 +1,10 @@
+---
+ansible_user: TEST\vagrant
+
+winca_certificate_type: enterprise_parent
+
+winca_parent_ca_config: erootca.test.loc\erootca
+
+winca_crypto_provider_name: RSA#Microsoft Software Key Storage Provider
+winca_hash_algorithm_name: sha256
+winca_key_length: 2048
