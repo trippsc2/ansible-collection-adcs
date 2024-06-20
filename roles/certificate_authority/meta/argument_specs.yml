@@ -48,7 +48,6 @@ argument_specs:
       winca_password:
         type: str
         required: true
-        no_log: true
         description:
           - The password for the `winca_username` account.
       winca_ca_cert_common_name:
@@ -214,7 +213,6 @@ argument_specs:
           - This is must be specified on a Standalone Root CA, if it is meant to sign Enterprise Subordinate CA certificates.
       winca_audit_filter:
         type: list
-        elements: str
         required: false
         default:
           - StartAndStopADCS
@@ -232,6 +230,7 @@ argument_specs:
           - ChangeCASecuritySettings
           - StoreAndRetrieveArchivedKeys
           - ChangeCAConfiguration
+        elements: str
         description:
           - The types of event types to log for the Certificate Authority.
       winca_crl_overlap_period:
