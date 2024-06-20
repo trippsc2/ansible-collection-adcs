@@ -57,7 +57,7 @@ output_template: |
   |Option|Description|Type|Required|Choices|Default|
   |---|---|---|---|---|---|
   {%- for name, details in options.items() %}
-  | {{ name }} | {% for description_line in details.description %}<p>{{ description_line }}</p>{% endfor %} | {{ details.display_type }} | {{ details.display_required }} | {{ details.display_type }} | {{ details.display_required }} | {% if ("choices" in details) %}<ul>{% for choice in details.choices %}<li>{{ choice }}</li>{% endfor %}</ul>{% endif %} | {{ details.display_default }} |
+  | {{ name }} | {% for description_line in details.description %}<p>{{ description_line }}</p>{% endfor %} | {{ details.display_type }} | {{ details.display_required }} | {% if ("choices" in details) %}<ul>{% for choice in details.choices %}<li>{{ choice }}</li>{% endfor %}</ul>{% endif %} | {{ details.display_default }} |
   {%- endfor %}
 
   {% endfor -%}
