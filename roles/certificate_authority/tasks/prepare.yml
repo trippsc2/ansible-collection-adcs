@@ -40,29 +40,6 @@
       ansible.builtin.set_fact:
         _winca_cert_id: "{{ _winca_latest_cert.serial_number }}"
 
-- name: Ensure the required NuGet package provider version is installed
-  trippsc2.windows.win_package_provider:
-    name: NuGet
-    min_version: '2.8.5.201'
-
-- name: Ensure 'PowerShellGet' PowerShell module is installed and updated
-  community.windows.win_psmodule:
-    name: PowerShellGet
-    accept_license: true
-    state: latest
-
-- name: Ensure 'PackageManagement' PowerShell module is installed and updated
-  community.windows.win_psmodule:
-    name: PackageManagement
-    accept_license: true
-    state: latest
-
-- name: Ensure 'PSGallery' PowerShell repository is enabled and trusted
-  community.windows.win_psrepository:
-    name: PSGallery
-    installation_policy: trusted
-    state: present
-
 - name: Ensure 'ActiveDirectoryCSDsc' PowerShell module is installed
   community.windows.win_psmodule:
     name: ActiveDirectoryCSDsc

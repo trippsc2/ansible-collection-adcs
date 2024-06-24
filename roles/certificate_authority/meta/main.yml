@@ -20,4 +20,5 @@ collections:
   - community.windows
   - trippsc2.windows
 
-dependencies: []
+dependencies:
+  - trippsc2.windows.install_psgallery
