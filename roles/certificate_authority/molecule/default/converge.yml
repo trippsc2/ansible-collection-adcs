@@ -3,7 +3,7 @@
   hosts:
     - rootca
   roles:
-    - role: trippsc2.adcs_certification_authority
+    - role: trippsc2.adcs.certificate_authority
 
 - name: Issue CA certificate to standalone subordinate CA
   hosts:
@@ -15,4 +15,4 @@
   hosts:
     - subca
   roles:
-    - role: trippsc2.adcs_certification_authority
+    - role: trippsc2.adcs.certificate_authority

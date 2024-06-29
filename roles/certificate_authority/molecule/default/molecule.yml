@@ -12,28 +12,124 @@ platforms:
     box: jtarpley/${MOLECULE_OS:-w2022}_cis
     memory: 2048
     cpus: 2
+    groups:
+      - windows
+      - windows_domain
   - name: srootca
     box: jtarpley/${MOLECULE_OS:-w2022}_cis
     memory: 2048
     cpus: 2
+    groups:
+      - rootca
+      - windows
+      - windows_standalone
   - name: ssubca
     box: jtarpley/${MOLECULE_OS:-w2022}_cis
     memory: 2048
     cpus: 2
+    groups:
+      - subca
+      - windows
+      - windows_standalone
   - name: erootca
     box: jtarpley/${MOLECULE_OS:-w2022}_cis
     memory: 2048
     cpus: 2
+    groups:
+      - rootca
+      - windows
+      - windows_domain
+      - windows_domain_members
   - name: esubca
     box: jtarpley/${MOLECULE_OS:-w2022}_cis
     memory: 2048
     cpus: 2
+    groups:
+      - subca
+      - windows
+      - windows_domain
+      - windows_domain_members
 provisioner:
   name: ansible
   inventory:
-    links:
-      hosts: ./hosts
-      host_vars: ./host_vars/
-      group_vars: ./group_vars/
+    group_vars:
+      rootca:
+        winca_is_root_ca: true
+        winca_crypto_provider_name: RSA#Microsoft Software Key Storage Provider
+        winca_hash_algorithm_name: sha256
+        winca_key_length: 2048
+      subca:
+        winca_is_root_ca: false
+        winca_ca_cert_common_name: "{{ inventory_hostname }}"
+        winca_ca_distinguished_name_suffix: DC=test,DC=loc
+        winsubca_request_config_file_temp_path: "C:\\Windows\\temp\\{{ inventory_hostname }}.inf"
+        winsubca_request_file_temp_path: "C:\\Windows\\temp\\{{ inventory_hostname }}.req"
+        winsubca_signing_ca_cert_file_temp_path: C:\Windows\temp\signingcacert.crt
+        winsubca_cert_file_temp_path: "C:\\Windows\\temp\\{{ inventory_hostname }}.crt"
+      windows:
+        ansible_shell_type: powershell
+        ansible_become_method: runas
+        ansible_become_user: SYSTEM
+        winca_add_certenroll_virtual_directory: true
+        winca_ca_cert_common_name: "{{ inventory_hostname }}"
+        winca_ca_distinguished_name_suffix: DC=test,DC=loc
+        winca_ad_config_distinguished_name: CN=Configuration,DC=test,DC=loc
+        winca_ad_base_distinguished_name: DC=test,DC=loc
+        winca_database_directory: C:\Windows\system32\CertLog
+        winca_log_directory: C:\Windows\system32\CertLog
+        winca_ca_cert_validity_period: 30
+        winca_ca_cert_validity_period_unit: Years
+        winca_ca_cert_publication_urls:
+          - 1:C:\Windows\system32\CertSrv\CertEnroll\%1_%3%4.crt
+          - 2:ldap:///CN=%7,CN=AIA,CN=Public Key Services,CN=Services,%6%11
+          - 2:http://%1/CertEnroll/%1_%3%4.crt
+          - 2:file://%1/CertEnroll/%1_%3%4.crt
+        winca_crl_publication_urls:
+          - 65:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl
+          - 6:http://%1/CertEnroll/%3%8%9.crl
+          - 6:file://%1/CertEnroll/%3%8%9.crl
+        winca_issued_cert_validity_period: 30
+        winca_issued_cert_validity_period_unit: Years
+        winca_crl_overlap_period: 10
+        winca_crl_overlap_period_unit: Years
+        winca_crl_period: 30
+        winca_crl_period_unit: Years
+        winca_audit_filter:
+          - StartAndStopADCS
+          - BackupAndRestoreCADatabase
+          - IssueAndManageCertificateRequests
+          - RevokeCertificatesAndPublishCRLs
+          - ChangeCASecuritySettings
+          - StoreAndRetrieveArchivedKeys
+          - ChangeCAConfiguration
+      windows_domain_members:
+        winca_is_ad_integrated: true
+        winca_username: TEST\vagrant
+        winca_password: vagrant
+      windows_standalone:
+        winca_username: .\vagrant
+        winca_password: vagrant
+        winca_is_ad_integrated: false
+    host_vars:
+      erootca:
+        ansible_user: TEST\vagrant
+      esubca:
+        ansible_user: TEST\vagrant
+        winca_certificate_type: enterprise_parent
+        winca_parent_ca_config: erootca.test.loc\erootca
+        winca_crypto_provider_name: RSA#Microsoft Software Key Storage Provider
+        winca_hash_algorithm_name: sha256
+        winca_key_length: 2048
+      srootca:
+        winca_crl_publication_urls:
+          - 65:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl
+          - 6:http://srootca.test.loc/CertEnroll/%3%8%9.crl
+          - 6:file://srootca.test.loc/CertEnroll/%3%8%9.crl
+      ssubca:
+        winsubca_ca_common_name: "{{ winca_ca_cert_common_name }}"
+        winsubca_ca_distinguished_name_suffix: "{{ winca_ca_distinguished_name_suffix }}"
+        winsubca_signing_ca_hostname: srootca
+        winsubca_signing_ca_fqdn: srootca
+        winsubca_signing_ca_common_name: srootca
 verifier:
   name: ansible

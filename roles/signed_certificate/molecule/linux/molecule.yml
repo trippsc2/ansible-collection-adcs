@@ -12,16 +12,34 @@ platforms:
     box: jtarpley/${MOLECULE_CA_BOX:-w2022_cis}
     memory: 2048
     cpus: 2
+    groups:
+      - windows
   - name: linux
     box: jtarpley/${MOLECULE_BOX:-rocky8_cis}
     memory: 2048
     cpus: 2
+    groups:
+      - subjects
 provisioner:
   name: ansible
   inventory:
-    links:
-      hosts: ./hosts
-      host_vars: ./host_vars/
-      group_vars: ./group_vars/
+    group_vars:
+      subjects:
+        cert_signing_ca_hostname: ca
+        cert_signing_ca_fqdn: ca
+        cert_signing_ca_common_name: RootCA
+        cert_signing_ca_csr_path: "C:\\Windows\\Temp\\{{ inventory_hostname }}.csr"
+      windows:
+        ansible_shell_type: powershell
+        ansible_become_method: runas
+        ansible_become_user: SYSTEM
+    host_vars:
+      ca:
+        winca_install_management_tools: true
+        winca_is_root_ca: true
+        winca_is_ad_integrated: false
+        winca_username: .\vagrant
+        winca_password: vagrant
+        winca_ca_cert_common_name: RootCA
 verifier:
   name: ansible

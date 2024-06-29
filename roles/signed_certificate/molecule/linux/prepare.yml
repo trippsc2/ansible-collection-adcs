@@ -3,7 +3,7 @@
   hosts:
     - ca
   roles:
-    - role: trippsc2.adcs_certification_authority
+    - role: trippsc2.adcs.certificate_authority
   tasks:
     - name: Reboot
       ansible.windows.win_reboot:
