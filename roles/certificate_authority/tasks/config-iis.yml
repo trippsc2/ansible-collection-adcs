@@ -21,7 +21,7 @@
           - Web-Mgmt-Console
           - Web-Metabase
         state: present
-        include_management_tools: true
+        include_management_tools: "{{ winca_install_management_tools }}"
       register: _winca_iis_installed
 
     - name: Reboot, if needed

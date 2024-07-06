@@ -1,7 +1,7 @@
 ---
-- name: Verify standalone root CA
+- name: Verify
   hosts:
-    - srootca
+    - subjects
   gather_facts: false
   tasks:
     - name: Check Windows Feature is installed
@@ -9,16 +9,71 @@
       ansible.windows.win_feature:
         name: Adcs-Cert-Authority
         state: present
+        include_management_tools: "{{ winca_include_management_tools | default(false) }}"
       register: _winca_feature_installed
 
-    - name: Test result
+    - name: Verify Windows Feature is installed
       ansible.builtin.assert:
         that:
           - not _winca_feature_installed.changed
-        fail_msg: The AD CS Certification Authority feature is not installed
-        success_msg: The AD CS Certification Authority feature is installed
+        fail_msg: The AD CS Certification Authority feature is not installed.
+        success_msg: The AD CS Certification Authority feature is installed.
 
-    - name: Ensure Certification Authority is installed
+    - name: Validate IIS CertEnroll virtual directory
+      when:
+        - winca_add_certenroll_virtual_directory | default(false)
+      block:
+        - name: Check IIS roles are installed
+          check_mode: true
+          ansible.windows.win_feature:
+            name:
+              - Web-Default-Doc
+              - Web-Dir-Browsing
+              - Web-Http-Errors
+              - Web-Static-Content
+              - Web-Http-Redirect
+              - Web-Http-Logging
+              - Web-Log-Libraries
+              - Web-Request-Monitor
+              - Web-Http-Tracing
+              - Web-Stat-Compression
+              - Web-Windows-Auth
+              - Web-ISAPI-Ext
+              - Web-Mgmt-Console
+              - Web-Metabase
+            state: present
+            include_management_tools: "{{ winca_install_management_tools | default(false) }}"
+          register: _winca_iis_installed
+
+        - name: Validate IIS roles are installed
+          ansible.builtin.assert:
+            that:
+              - _winca_iis_installed.reboot_required
+            fail_msg: The IIS roles are not installed.
+            success_msg: The IIS roles are installed.
+        
+        - name: Check CertEnroll virtual directory is configured
+          check_mode: true
+          community.windows.win_iis_virtualdirectory:
+            site: Default Web Site
+            physical_path: C:\Windows\system32\CertSrv\CertEnroll
+            name: CertEnroll
+            state: present
+          register: _winca_certenroll_virtual_directory_installed
+
+        - name: Validate CertEnroll virtual directory is configured
+          ansible.builtin.assert:
+            that:
+              - not _winca_certenroll_virtual_directory_installed.changed
+            fail_msg: The CertEnroll virtual directory is not configured.
+            success_msg: The CertEnroll virtual directory is configured.
+
+- name: Verify standalone root CA
+  hosts:
+    - srootca
+  gather_facts: false
+  tasks:
+    - name: Check Certification Authority is installed
       check_mode: true
       ansible.windows.win_dsc:
         resource_name: AdcsCertificationAuthority
@@ -38,14 +93,14 @@
         ValidityPeriodUnits: "{{ winca_ca_cert_validity_period }}"
       register: _winca_ca_installed
 
-    - name: Test result
+    - name: Validate Certification Authority is installed
       ansible.builtin.assert:
         that: 
-          - not _winca_feature_installed.changed
-        fail_msg: The AD CS Certification Authority is not installed
-        success_msg: The AD CS Certification Authority is installed
+          - not _winca_ca_installed.changed
+        fail_msg: The AD CS Certification Authority is not installed.
+        success_msg: The AD CS Certification Authority is installed.
 
-    - name: Ensure Certification Authority Settings are applied
+    - name: Check Certification Authority Settings are applied
       check_mode: true
       ansible.windows.win_dsc:
         resource_name: AdcsCertificationAuthoritySettings
@@ -63,32 +118,18 @@
         CRLPeriod: "{{ winca_crl_period_unit }}"
       register: _winca_ca_settings_applied
 
-    - name: Test result
+    - name: Validate Certification Authority Settings are applied
       ansible.builtin.assert:
         that:
           - not _winca_ca_settings_applied.changed
-        fail_msg: The AD CS Certification Authority settings are not applied
-        success_msg: The AD CS Certification Authority settings are applied
+        fail_msg: The AD CS Certification Authority settings are not applied.
+        success_msg: The AD CS Certification Authority settings are applied.
 
 - name: Verify enterprise root CA
   hosts:
     - erootca
   gather_facts: false
   tasks:
-    - name: Check Windows Feature is installed
-      check_mode: true
-      ansible.windows.win_feature:
-        name: Adcs-Cert-Authority
-        state: present
-      register: _winca_feature_installed
-
-    - name: Test result
-      ansible.builtin.assert:
-        that:
-          - not _winca_feature_installed.changed
-        fail_msg: The AD CS Certification Authority feature is not installed
-        success_msg: The AD CS Certification Authority feature is installed
-
     - name: Ensure Certification Authority is installed
       check_mode: true
       ansible.windows.win_dsc:
@@ -112,7 +153,7 @@
     - name: Test result
       ansible.builtin.assert:
         that: 
-          - not _winca_feature_installed.changed
+          - not _winca_ca_installed.changed
         fail_msg: The AD CS Certification Authority is not installed
         success_msg: The AD CS Certification Authority is installed
 
@@ -146,20 +187,6 @@
     - ssubca
   gather_facts: false
   tasks:
-    - name: Check Windows Feature is installed
-      check_mode: true
-      ansible.windows.win_feature:
-        name: Adcs-Cert-Authority
-        state: present
-      register: _winca_feature_installed
-
-    - name: Test result
-      ansible.builtin.assert:
-        that:
-          - not _winca_feature_installed.changed
-        fail_msg: The AD CS Certification Authority feature is not installed
-        success_msg: The AD CS Certification Authority feature is installed
-
     - name: Ensure Certification Authority is installed
       check_mode: true
       ansible.windows.win_dsc:
@@ -178,7 +205,7 @@
     - name: Test result
       ansible.builtin.assert:
         that: 
-          - not _winca_feature_installed.changed
+          - not _winca_ca_installed.changed
         fail_msg: The AD CS Certification Authority is not installed
         success_msg: The AD CS Certification Authority is installed
 
@@ -212,20 +239,6 @@
     - esubca
   gather_facts: false
   tasks:
-    - name: Check Windows Feature is installed
-      check_mode: true
-      ansible.windows.win_feature:
-        name: Adcs-Cert-Authority
-        state: present
-      register: _winca_feature_installed
-
-    - name: Test result
-      ansible.builtin.assert:
-        that:
-          - not _winca_feature_installed.changed
-        fail_msg: The AD CS Certification Authority feature is not installed
-        success_msg: The AD CS Certification Authority feature is installed
-
     - name: Ensure Certification Authority is installed
       check_mode: true
       ansible.windows.win_dsc:
@@ -244,7 +257,7 @@
     - name: Test result
       ansible.builtin.assert:
         that: 
-          - not _winca_feature_installed.changed
+          - not _winca_ca_installed.changed
         fail_msg: The AD CS Certification Authority is not installed
         success_msg: The AD CS Certification Authority is installed
 
