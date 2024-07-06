@@ -1,7 +1,7 @@
 ---
 - name: Converge for root CA
   hosts:
-    - rootca
+    - root_ca
   roles:
     - role: trippsc2.adcs.certificate_authority
 
@@ -13,6 +13,6 @@
 
 - name: Converge for sub CA
   hosts:
-    - subca
+    - subordinate_ca
   roles:
     - role: trippsc2.adcs.certificate_authority
