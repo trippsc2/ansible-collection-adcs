@@ -122,20 +122,20 @@ provisioner:
       esubca:
         ansible_user: TEST\vagrant
         winca_certificate_type: enterprise_parent
-        winca_parent_ca_config: eroot_ca.test.loc\eroot_ca
+        winca_parent_ca_config: erootca.test.loc\erootca
         winca_crypto_provider_name: RSA#Microsoft Software Key Storage Provider
         winca_hash_algorithm_name: sha256
         winca_key_length: 2048
       srootca:
         winca_crl_publication_urls:
           - 65:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl
-          - 6:http://sroot_ca.test.loc/CertEnroll/%3%8%9.crl
-          - 6:file://sroot_ca.test.loc/CertEnroll/%3%8%9.crl
+          - 6:http://srootca.test.loc/CertEnroll/%3%8%9.crl
+          - 6:file://srootca.test.loc/CertEnroll/%3%8%9.crl
       ssubca:
         winsubca_ca_common_name: "{{ winca_ca_cert_common_name }}"
         winsubca_ca_distinguished_name_suffix: "{{ winca_ca_distinguished_name_suffix }}"
-        winsubca_signing_ca_hostname: sroot_ca
-        winsubca_signing_ca_fqdn: sroot_ca
-        winsubca_signing_ca_common_name: sroot_ca
+        winsubca_signing_ca_hostname: srootca
+        winsubca_signing_ca_fqdn: srootca
+        winsubca_signing_ca_common_name: srootca
 verifier:
   name: ansible
