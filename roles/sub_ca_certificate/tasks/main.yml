@@ -1,4 +1,7 @@
 ---
+- name: Validate
+  ansible.builtin.import_tasks: validate.yml
+
 - name: Get certificate store
   community.windows.win_certificate_info:
     store_name: My

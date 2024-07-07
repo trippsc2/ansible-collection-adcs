@@ -48,7 +48,7 @@
         - name: Validate IIS roles are installed
           ansible.builtin.assert:
             that:
-              - _winca_iis_installed.reboot_required
+              - not _winca_iis_installed.changed
             fail_msg: The IIS roles are not installed.
             success_msg: The IIS roles are installed.
         
@@ -154,8 +154,8 @@
       ansible.builtin.assert:
         that: 
           - not _winca_ca_installed.changed
-        fail_msg: The AD CS Certification Authority is not installed
-        success_msg: The AD CS Certification Authority is installed
+        fail_msg: The AD CS Certification Authority is not installed.
+        success_msg: The AD CS Certification Authority is installed.
 
     - name: Ensure Certification Authority Settings are applied
       check_mode: true
@@ -179,8 +179,8 @@
       ansible.builtin.assert:
         that:
           - not _winca_ca_settings_applied.changed
-        fail_msg: The AD CS Certification Authority settings are not applied
-        success_msg: The AD CS Certification Authority settings are applied
+        fail_msg: The AD CS Certification Authority settings are not applied.
+        success_msg: The AD CS Certification Authority settings are applied.
 
 - name: Verify standalone subordinate CA
   hosts:
@@ -206,8 +206,8 @@
       ansible.builtin.assert:
         that: 
           - not _winca_ca_installed.changed
-        fail_msg: The AD CS Certification Authority is not installed
-        success_msg: The AD CS Certification Authority is installed
+        fail_msg: The AD CS Certification Authority is not installed.
+        success_msg: The AD CS Certification Authority is installed.
 
     - name: Ensure Certification Authority Settings are applied
       check_mode: true
@@ -231,8 +231,8 @@
       ansible.builtin.assert:
         that:
           - not _winca_ca_settings_applied.changed
-        fail_msg: The AD CS Certification Authority settings are not applied
-        success_msg: The AD CS Certification Authority settings are applied
+        fail_msg: The AD CS Certification Authority settings are not applied.
+        success_msg: The AD CS Certification Authority settings are applied.
 
 - name: Verify enterprise subordinate CA
   hosts:
@@ -258,8 +258,8 @@
       ansible.builtin.assert:
         that: 
           - not _winca_ca_installed.changed
-        fail_msg: The AD CS Certification Authority is not installed
-        success_msg: The AD CS Certification Authority is installed
+        fail_msg: The AD CS Certification Authority is not installed.
+        success_msg: The AD CS Certification Authority is installed.
 
     - name: Ensure Certification Authority Settings are applied
       check_mode: true
@@ -283,5 +283,5 @@
       ansible.builtin.assert:
         that:
           - not _winca_ca_settings_applied.changed
-        fail_msg: The AD CS Certification Authority settings are not applied
-        success_msg: The AD CS Certification Authority settings are applied
+        fail_msg: The AD CS Certification Authority settings are not applied.
+        success_msg: The AD CS Certification Authority settings are applied.

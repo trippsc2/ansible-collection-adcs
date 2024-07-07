@@ -17,9 +17,9 @@
               selectattr('has_private_key', 'equalto', true) |
               list }}
 
-    - name: Fail if certificate not found
+    - name: Validate that the certificate is found
       ansible.builtin.assert:
         that:
           - _winsubca_cert_exists | length > 0
-        fail_msg: Certificate not found
-        success_msg: Certificate found
+        fail_msg: Certificate not found.
+        success_msg: Certificate found.

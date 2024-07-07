@@ -23,19 +23,19 @@
       ansible.builtin.assert:
         that:
           - _private_key_info.stat.exists
-        fail_msg: Private key file does not exist
-        success_msg: Private key file exists
+        fail_msg: Private key file does not exist.
+        success_msg: Private key file exists.
 
     - name: Assert that certificate exists
       ansible.builtin.assert:
         that:
           - _certificate_info.stat.exists
-        fail_msg: Certificate file does not exist
-        success_msg: Certificate file exists
+        fail_msg: Certificate file does not exist.
+        success_msg: Certificate file exists.
 
     - name: Assert that CSR file is not present
       ansible.builtin.assert:
         that:
           - not _csr_info.stat.exists
-        fail_msg: CSR file still exists
-        success_msg: CSR file does not exist, as expected
+        fail_msg: CSR file still exists.
+        success_msg: CSR file does not exist, as expected.

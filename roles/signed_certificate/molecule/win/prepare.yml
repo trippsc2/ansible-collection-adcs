@@ -4,6 +4,3 @@
     - ca
   roles:
     - role: trippsc2.adcs.certificate_authority
-  tasks:
-    - name: Reboot
-      ansible.windows.win_reboot:

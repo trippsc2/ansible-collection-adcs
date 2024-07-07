@@ -80,6 +80,9 @@ provisioner:
         winsubca_signing_ca_cert_file_temp_path: C:\Windows\temp\signingcacert.crt
         winsubca_cert_file_temp_path: "C:\\Windows\\temp\\{{ inventory_hostname }}.crt"
       subjects:
+        winca_crypto_provider_name: RSA#Microsoft Software Key Storage Provider
+        winca_hash_algorithm_name: sha256
+        winca_key_length: 2048
         winca_add_certenroll_virtual_directory: true
         winca_ca_cert_common_name: "{{ inventory_hostname }}"
         winca_ca_distinguished_name_suffix: DC=test,DC=loc
@@ -106,12 +109,12 @@ provisioner:
         winca_crl_period_unit: Years
         winca_audit_filter:
           - StartAndStopADCS
-          - BackupAndRestorenterprise_caDatabase
+          - BackupAndRestoreCADatabase
           - IssueAndManageCertificateRequests
           - RevokeCertificatesAndPublishCRLs
-          - Changenterprise_caSecuritySettings
+          - ChangeCASecuritySettings
           - StoreAndRetrieveArchivedKeys
-          - Changenterprise_caConfiguration
+          - ChangeCAConfiguration
       windows:
         ansible_shell_type: powershell
         ansible_become_method: runas
@@ -123,9 +126,6 @@ provisioner:
         ansible_user: TEST\vagrant
         winca_certificate_type: enterprise_parent
         winca_parent_ca_config: erootca.test.loc\erootca
-        winca_crypto_provider_name: RSA#Microsoft Software Key Storage Provider
-        winca_hash_algorithm_name: sha256
-        winca_key_length: 2048
       srootca:
         winca_crl_publication_urls:
           - 65:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl

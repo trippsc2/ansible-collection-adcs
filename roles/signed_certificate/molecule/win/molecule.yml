@@ -9,7 +9,7 @@ driver:
   parallel: true
 platforms:
   - name: ca
-    box: jtarpley/${MOLECULE_CA_BOX:-w2022_cis}
+    box: jtarpley/w2022_cis
     memory: 2048
     cpus: 2
     groups:
