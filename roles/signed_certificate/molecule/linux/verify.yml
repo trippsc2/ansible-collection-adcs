@@ -45,21 +45,21 @@
     - name: Validate private key owner
       ansible.builtin.assert:
         that:
-          - _private_key_info.stat.pw_name == 'root'
+          - _private_key_info.stat.pw_name == cert_private_key_owner | default('root')
         fail_msg: Private key file does not have expected owner.
         success_msg: Private key file has expected owner.
 
     - name: Validate private key group
       ansible.builtin.assert:
         that:
-          - _private_key_info.stat.gr_name == 'root'
+          - _private_key_info.stat.gr_name == cert_private_key_group | default('root')
         fail_msg: Private key file does not have expected group.
         success_msg: Private key file has expected group.
 
     - name: Validate private key mode
       ansible.builtin.assert:
         that:
-          - _private_key_info.stat.mode == '0600'
+          - _private_key_info.stat.mode == cert_private_key_mode | default('0600')
         fail_msg: Private key file does not have expected mode.
         success_msg: Private key file has expected mode.
 
@@ -73,21 +73,21 @@
     - name: Validate certificate owner
       ansible.builtin.assert:
         that:
-          - _certificate_info.stat.pw_name == 'root'
+          - _certificate_info.stat.pw_name == cert_certificate_owner | default('root')
         fail_msg: Certificate file does not have expected owner.
         success_msg: Certificate file has expected owner.
 
     - name: Validate certificate group
       ansible.builtin.assert:
         that:
-          - _certificate_info.stat.gr_name == 'root'
+          - _certificate_info.stat.gr_name == cert_certificate_group | default('root')
         fail_msg: Certificate file does not have expected group.
         success_msg: Certificate file has expected group.
 
     - name: Validate certificate mode
       ansible.builtin.assert:
         that:
-          - _certificate_info.stat.mode == '0644'
+          - _certificate_info.stat.mode == cert_certificate_mode | default('0644')
         fail_msg: Certificate file does not have expected mode.
         success_msg: Certificate file has expected mode.
 
