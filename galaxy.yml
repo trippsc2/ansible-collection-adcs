@@ -21,6 +21,7 @@ repository: https://github.com/trippsc2/ansible-collection-adcs.git
 manifest:
   directives:
     - recursive-include roles/* *.md
+    - recursive-include roles/*/files **
     - exclude galaxy.yml galaxy.yaml MANIFEST.json FILES.json <namespace>-<name>-*.tar.gz
     - recursive-exclude tests/output **
     - recursive-exclude roles/*/molecule **
