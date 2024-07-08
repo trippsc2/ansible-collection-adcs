@@ -22,7 +22,7 @@ manifest:
   directives:
     - recursive-include roles/* *.md
     - recursive-include roles/*/files **
-    - exclude galaxy.yml galaxy.yaml MANIFEST.json FILES.json <namespace>-<name>-*.tar.gz
+    - exclude galaxy.yml galaxy.yaml MANIFEST.json FILES.json *.tar.gz
     - recursive-exclude tests/output **
     - recursive-exclude roles/*/molecule **
     - recursive-exclude molecule **
