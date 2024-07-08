@@ -19,21 +19,21 @@
         path: C:\Windows\Temp\cert.csr
       register: _csr_info
 
-    - name: Validate that private key exists
+    - name: Verify that private key exists
       ansible.builtin.assert:
         that:
           - _private_key_info.stat.exists
         fail_msg: Private key file does not exist.
         success_msg: Private key file exists.
 
-    - name: Validate that certificate exists
+    - name: Verify that certificate exists
       ansible.builtin.assert:
         that:
           - _certificate_info.stat.exists
         fail_msg: Certificate file does not exist.
         success_msg: Certificate file exists.
 
-    - name: Validate that CSR file is not present
+    - name: Verify that CSR file is not present
       ansible.builtin.assert:
         that:
           - not _csr_info.stat.exists

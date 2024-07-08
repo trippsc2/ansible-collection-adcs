@@ -35,63 +35,63 @@
         path: /tmp/cert.csr
       register: _csr_info
 
-    - name: Validate that private key exists
+    - name: Verify that private key exists
       ansible.builtin.assert:
         that:
           - _private_key_info.stat.exists
         fail_msg: Private key file does not exist.
         success_msg: Private key file exists.
 
-    - name: Validate private key owner
+    - name: Verify private key owner
       ansible.builtin.assert:
         that:
           - _private_key_info.stat.pw_name == cert_private_key_owner | default('root')
         fail_msg: Private key file does not have expected owner.
         success_msg: Private key file has expected owner.
 
-    - name: Validate private key group
+    - name: Verify private key group
       ansible.builtin.assert:
         that:
           - _private_key_info.stat.gr_name == cert_private_key_group | default('root')
         fail_msg: Private key file does not have expected group.
         success_msg: Private key file has expected group.
 
-    - name: Validate private key mode
+    - name: Verify private key mode
       ansible.builtin.assert:
         that:
           - _private_key_info.stat.mode == cert_private_key_mode | default('0600')
         fail_msg: Private key file does not have expected mode.
         success_msg: Private key file has expected mode.
 
-    - name: Validate that certificate exists
+    - name: Verify that certificate exists
       ansible.builtin.assert:
         that:
           - _certificate_info.stat.exists
         fail_msg: Certificate file does not exist.
         success_msg: Certificate file exists.
 
-    - name: Validate certificate owner
+    - name: Verify certificate owner
       ansible.builtin.assert:
         that:
           - _certificate_info.stat.pw_name == cert_certificate_owner | default('root')
         fail_msg: Certificate file does not have expected owner.
         success_msg: Certificate file has expected owner.
 
-    - name: Validate certificate group
+    - name: Verify certificate group
       ansible.builtin.assert:
         that:
           - _certificate_info.stat.gr_name == cert_certificate_group | default('root')
         fail_msg: Certificate file does not have expected group.
         success_msg: Certificate file has expected group.
 
-    - name: Validate certificate mode
+    - name: Verify certificate mode
       ansible.builtin.assert:
         that:
           - _certificate_info.stat.mode == cert_certificate_mode | default('0644')
         fail_msg: Certificate file does not have expected mode.
         success_msg: Certificate file has expected mode.
 
-    - name: Validate that CSR file is not present
+    - name: Verify that CSR file is not present
       ansible.builtin.assert:
         that:
           - not _csr_info.stat.exists

@@ -19,7 +19,7 @@
         fail_msg: The AD CS Certification Authority feature is not installed.
         success_msg: The AD CS Certification Authority feature is installed.
 
-    - name: Validate IIS CertEnroll virtual directory
+    - name: Verify IIS CertEnroll virtual directory
       when:
         - winca_add_certenroll_virtual_directory | default(false)
       block:
@@ -45,7 +45,7 @@
             include_management_tools: "{{ winca_install_management_tools | default(false) }}"
           register: _winca_iis_installed
 
-        - name: Validate IIS roles are installed
+        - name: Verify IIS roles are installed
           ansible.builtin.assert:
             that:
               - not _winca_iis_installed.changed
@@ -61,7 +61,7 @@
             state: present
           register: _winca_certenroll_virtual_directory_installed
 
-        - name: Validate CertEnroll virtual directory is configured
+        - name: Verify CertEnroll virtual directory is configured
           ansible.builtin.assert:
             that:
               - not _winca_certenroll_virtual_directory_installed.changed
@@ -93,7 +93,7 @@
         ValidityPeriodUnits: "{{ winca_ca_cert_validity_period }}"
       register: _winca_ca_installed
 
-    - name: Validate Certification Authority is installed
+    - name: Verify Certification Authority is installed
       ansible.builtin.assert:
         that: 
           - not _winca_ca_installed.changed
@@ -118,7 +118,7 @@
         CRLPeriod: "{{ winca_crl_period_unit }}"
       register: _winca_ca_settings_applied
 
-    - name: Validate Certification Authority Settings are applied
+    - name: Verify Certification Authority Settings are applied
       ansible.builtin.assert:
         that:
           - not _winca_ca_settings_applied.changed
@@ -150,7 +150,7 @@
         ValidityPeriodUnits: "{{ winca_ca_cert_validity_period }}"
       register: _winca_ca_installed
 
-    - name: Test result
+    - name: Verify Certification Authority is installed
       ansible.builtin.assert:
         that: 
           - not _winca_ca_installed.changed
@@ -175,7 +175,7 @@
         CRLPeriod: "{{ winca_crl_period_unit }}"
       register: _winca_ca_settings_applied
 
-    - name: Test result
+    - name: Verify Certification Authority Settings are applied
       ansible.builtin.assert:
         that:
           - not _winca_ca_settings_applied.changed
@@ -202,7 +202,7 @@
         ValidityPeriodUnits: "{{ winca_ca_cert_validity_period }}"
       register: _winca_ca_installed
 
-    - name: Test result
+    - name: Verify Certification Authority is installed
       ansible.builtin.assert:
         that: 
           - not _winca_ca_installed.changed
@@ -227,7 +227,7 @@
         CRLPeriod: "{{ winca_crl_period_unit }}"
       register: _winca_ca_settings_applied
 
-    - name: Test result
+    - name: Verify Certification Authority Settings are applied
       ansible.builtin.assert:
         that:
           - not _winca_ca_settings_applied.changed
@@ -254,7 +254,7 @@
         ValidityPeriodUnits: "{{ winca_ca_cert_validity_period }}"
       register: _winca_ca_installed
 
-    - name: Test result
+    - name: Verify Certification Authority is installed
       ansible.builtin.assert:
         that: 
           - not _winca_ca_installed.changed
@@ -279,7 +279,7 @@
         CRLPeriod: "{{ winca_crl_period_unit }}"
       register: _winca_ca_settings_applied
 
-    - name: Test result
+    - name: Verify Certification Authority Settings are applied
       ansible.builtin.assert:
         that:
           - not _winca_ca_settings_applied.changed
