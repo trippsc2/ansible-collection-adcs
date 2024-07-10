@@ -29,22 +29,22 @@ argument_specs:
           - enterprise_parent
         description:
           - The type of CA certificate.
-          - If `winca_is_root_ca` is set to `true` or `winca_is_ad_integrated` is set to `false`, this is ignored.
-          - If set to `existing`, an existing CA certificate matching `winca_ca_cert_common_name` is used.
+          - If *winca_is_root_ca* is set to `true` or *winca_is_ad_integrated* is set to `false`, this is ignored.
+          - If set to `existing`, an existing CA certificate matching *winca_ca_cert_common_name* is used.
           - If set to `enterprise_parent`, a new CA certificate is generated and signed by the parent.
       winca_install_management_tools:
         type: bool
         required: false
         default: true
         description:
-          - Whether to install the Remote Server Administration Tools (RSAT) for Certificate Authority feature.
+          - Whether to install the Remote Server Administration Tools (RSAT) for the Certificate Authority and IIS roles, if applicable.
       winca_username:
         type: str
         required: true
         description:
-          - The username to use when installing the Certificate Authority.
+          - The username to use when configuring the Certificate Authority.
           - This account must have administrative rights on the target system.
-          - If `winca_is_ad_integrated` is `true`, this account must be an Enterprise Admin.
+          - If *winca_is_ad_integrated* is `true`, this account must have Enterprise Admin rights in the AD forest.
       winca_password:
         type: str
         required: true
@@ -55,23 +55,36 @@ argument_specs:
         required: true
         description:
           - The common name for the Certificate Authority certificate.
-          - If `winca_is_root_ca` is set to `true`, this is the common name for the generated Root CA certificate.
-          - If `winca_is_root_ca` is set to `false` and either `winca_is_ad_integrated` is set to `false` or `winca_certificate_type` is set to `existing`, this is used to lookup the existing CA certificate by common name.
-          - If `winca_is_root_ca` is set to `false`, `winca_is_ad_integrated` is set to `true`, and `winca_certificate_type` is set to `enterprise_parent`, this is used as the CA certificate common name to be signed by the parent.
+          - If *winca_is_root_ca* is set to `true`, this is the common name for the generated Root CA certificate.
+          - If *winca_is_root_ca* is set to `false` and either *winca_is_ad_integrated* is set to `false` or *winca_certificate_type* is set to `existing`, this is used to lookup the existing CA certificate by common name.
+          - If *winca_is_root_ca* is set to `false`, *winca_is_ad_integrated* is set to `true`, and *winca_certificate_type* is set to `enterprise_parent`, this is used as the CA certificate common name to be signed by the parent.
       winca_ca_distinguished_name_suffix:
         type: str
         required: false
         description:
           - The distinguished name suffix for the Certificate Authority.
-          - If `winca_is_root_ca` is set to `true`, this is the distinguished name suffix for the generated Root CA certificate.
-          - If `winca_is_root_ca` is set to `false`, `winca_is_ad_integrated` is set to `true`, and `winca_certificate_type` is set to `enterprise_parent`, this is used as the CA certificate distinguished name suffix to be signed by the parent.
+          - If *winca_is_root_ca* is set to `true`, this is the distinguished name suffix for the generated Root CA certificate.
+          - If *winca_is_root_ca* is set to `false`, *winca_is_ad_integrated* is set to `true`, and *winca_certificate_type* is set to `enterprise_parent`, this is used as the CA certificate distinguished name suffix to be signed by the parent.
       winca_crypto_provider_name:
         type: str
         required: false
-        default: RSA#Microsoft Software Key Storage Provider
+        default: Microsoft Software Key Storage Provider
         description:
           - The cryptographic provider name to use when generating the CA key pair.
-          - This is only used when `winca_is_root_ca` is set to `true` or `winca_certificate_type` is set to `enterprise_parent`.
+          - This will be combined with *winca_crypto_provider_algorithm* to determine the cryptographic provider.
+          - If *winca_is_root_ca* is set to `false` and *winca_certificate_type* is set to `existing`, this is ignored.
+      winca_crypto_provider_algorithm:
+        type: str
+        required: false
+        default: rsa
+        choices:
+          - rsa
+          - ecdsa_p256
+          - ecdsa_p521
+        description:
+          - The cryptographic provider algorithm to use when generating the CA key pair.
+          - This will be combined with *winca_crypto_provider_algorithm* to determine the cryptographic provider.
+          - If *winca_is_root_ca* is set to `false` and *winca_certificate_type* is set to `existing`, this is ignored.
       winca_database_directory:
         type: str
         required: false
@@ -84,55 +97,61 @@ argument_specs:
         default: sha256
         choices:
           - sha256
-          - sha3_256
-          - sha3_384
-          - sha3_512
           - sha384
           - sha512
         description:
           - The hash algorithm name to use when generating the CA key pair.
-          - This is only used when `winca_is_root_ca` is set to `true` or `winca_certificate_type` is set to `enterprise_parent`.
+          - If *winca_is_root_ca* is set to `false` and *winca_certificate_type* is set to `existing`, this is ignored.
       winca_ignore_unicode:
         type: bool
         required: false
         default: false
         description:
           - Whether to ignore Unicode characters in the distinguished name.
-          - This is only used when `winca_is_root_ca` is set to `true` or `winca_certificate_type` is set to `enterprise_parent`.
+          - If *winca_is_root_ca* is set to `false` and *winca_certificate_type* is set to `existing`, this is ignored.
       winca_key_length:
         type: int
         required: false
         default: 2048
+        choices:
+          - 256
+          - 521
+          - 1024
+          - 2048
+          - 4096
         description:
           - The key length to use when generating the CA key pair.
-          - This is only used when `winca_is_root_ca` is set to `true` or `winca_certificate_type` is set to `enterprise_parent`.
+          - If *winca_crypto_provider_algorithm* is `rsa`, this must be one of `1024`, `2048`, or `4096`.
+          - If *winca_crypto_provider_algorithm* is `ecdsa_p256`, this must be `256`.
+          - If *winca_crypto_provider_algorithm* is `ecdsa_p521`, this must be `521`.
+          - If *winca_is_root_ca* is set to `false` and *winca_certificate_type* is set to `existing`, this is ignored.
       winca_overwrite_existing_ca_in_domain:
         type: bool
         required: false
         default: false
         description:
           - Whether to overwrite the existing Certificate Authority in the domain.
-          - This is only used when `winca_is_ad_integrated` is set to `true`.
+          - If *winca_is_ad_integrated* is set to `false`, this is ignored.
       winca_overwrite_existing_database:
         type: bool
         required: false
         default: false
         description:
-          - Whether to overwrite the existing Certificate Authority database.
+          - Whether to overwrite an existing Certificate Authority database, if one exists.
       winca_overwrite_existing_key:
         type: bool
         required: false
         default: false
         description:
           - Whether to overwrite the existing CA key pair.
-          - This is only used when `winca_is_root_ca` is set to `true`.
+          - If *winca_is_root_ca* is set to `false`, this is ignored.
       winca_ca_cert_validity_period:
         type: int
         required: false
         default: 5
         description:
           - The validity period for the CA certificate.
-          - This is only used when `winca_is_root_ca` is set to `true`.
+          - If *winca_is_root_ca* is set to `false`, this is ignored.
       winca_ca_cert_validity_period_unit:
         type: str
         required: false
@@ -145,7 +164,7 @@ argument_specs:
           - Years
         description:
           - The validity period unit for the CA certificate.
-          - This is only used when `winca_is_root_ca` is set to `true`.
+          - If *winca_is_root_ca* is set to `false`, this is ignored.
       winca_add_certenroll_virtual_directory:
         type: bool
         required: false
@@ -159,8 +178,8 @@ argument_specs:
         required: false
         description:
           - The parent CA configuration to use when generating the CA certificate.
-          - This is only used when `winca_certificate_type` is set to `enterprise_parent`.
           - This should be formatted as `<server-fqdn>\<ca-common-name>`.
+          - If *winca_is_root_ca* is set to `true`, *winca_is_ad_integrated* is set to `false`, or *winca_certificate_type* is set to `existing`, this is ignored.
       winca_log_directory:
         type: str
         required: false
@@ -204,13 +223,13 @@ argument_specs:
         required: false
         description:
           - The distinguished name for the Active Directory configuration.
-          - This is must be specified on a Standalone Root CA, if it is meant to sign Enterprise Subordinate CA certificates.
+          - This must be specified on a Standalone Root CA, if it is meant to sign Enterprise Subordinate CA certificates.
       winca_ad_base_distinguished_name:
         type: str
         required: false
         description:
           - The base distinguished name for the Active Directory configuration.
-          - This is must be specified on a Standalone Root CA, if it is meant to sign Enterprise Subordinate CA certificates.
+          - This must be specified on a Standalone Root CA, if it is meant to sign Enterprise Subordinate CA certificates.
       winca_audit_filter:
         type: list
         required: false

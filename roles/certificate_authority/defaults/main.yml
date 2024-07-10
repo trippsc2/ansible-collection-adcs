@@ -6,9 +6,12 @@ winca_is_ad_integrated: false
 
 winca_add_certenroll_virtual_directory: false
 
-winca_crypto_provider_name: RSA#Microsoft Software Key Storage Provider
+winca_certificate_type: existing
+
+winca_crypto_provider_name: Microsoft Software Key Storage Provider
+winca_crypto_provider_algorithm: rsa
 winca_hash_algorithm_name: sha256
-winca_key_length: 2048
+winca_key_length: "{{ _winca_default_key_length }}"
 winca_overwrite_existing_key: false
 
 winca_ignore_unicode: false

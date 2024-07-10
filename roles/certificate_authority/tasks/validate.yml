@@ -28,3 +28,12 @@
       - ansible_windows_domain_member
     fail_msg: This machine is not a domain member.
     success_msg: This machine is a domain member.
+
+- name: Validate key length
+  when:
+    - winca_is_root_ca or winca_certificate_type == 'enterprise_parent'
+  ansible.builtin.assert:
+    that:
+      - winca_key_length | int in _winca_allowed_key_lengths_by_algorithm[winca_crypto_provider_algorithm]
+    fail_msg: "Key length for {{ winca_crypto_provider_algorithm | upper }} keys must be one of: {{ _winca_allowed_key_lengths_by_algorithm[winca_crypto_provider_algorithm] | join(', ') }}"
+    success_msg: "{{ winca_crypto_provider_algorithm | upper }} key length of {{ winca_key_length }} is valid."

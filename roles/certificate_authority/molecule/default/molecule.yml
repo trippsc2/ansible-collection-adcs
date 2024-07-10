@@ -80,7 +80,8 @@ provisioner:
         winsubca_signing_ca_cert_file_temp_path: C:\Windows\temp\signingcacert.crt
         winsubca_cert_file_temp_path: "C:\\Windows\\temp\\{{ inventory_hostname }}.crt"
       subjects:
-        winca_crypto_provider_name: RSA#Microsoft Software Key Storage Provider
+        winca_crypto_provider_name: Microsoft Software Key Storage Provider
+        winca_crypto_provider_algorithm: rsa
         winca_hash_algorithm_name: sha256
         winca_key_length: 2048
         winca_add_certenroll_virtual_directory: true

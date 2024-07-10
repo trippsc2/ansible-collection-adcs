@@ -1,13 +1,28 @@
 ---
+_winca_default_key_length_by_algorithm:
+  rsa: 2048
+  ecdsa_p256: 256
+  ecdsa_p521: 521
+
+_winca_allowed_key_lengths_by_algorithm:
+  rsa:
+    - 1024
+    - 2048
+    - 4096
+  ecdsa_p256:
+    - 256
+  ecdsa_p521:
+    - 521
+
 _winca_ca_type_prefix: "{{ 'Enterprise' if winca_is_ad_integrated else 'Standalone' }}"
 _winca_ca_type_suffix: "{{ 'RootCA' if winca_is_root_ca else 'SubordinateCA' }}"
 
-_winca_formatted_hash_algorithm_name: "{{ winca_hash_algorithm_name | upper }}"
-
 _winca_ca_type: "{{ _winca_ca_type_prefix }}{{ _winca_ca_type_suffix }}"
 
-_winca_crypto_provider_name: "{{ winca_crypto_provider_name if _winca_certificate_options_needed else omit }}"
-_winca_hash_algorithm_name: "{{ _winca_formatted_hash_algorithm_name if _winca_certificate_options_needed else omit }}"
+_winca_default_key_length: "{{ _winca_default_key_length_by_algorithm[winca_crypto_provider_algorithm] }}"
+_winca_formatted_crypto_provider_name: "{{ winca_crypto_provider_algorithm | upper }}#{{ winca_crypto_provider_name }}"
+_winca_crypto_provider_name: "{{ _winca_formatted_crypto_provider_name if _winca_certificate_options_needed else omit }}"
+_winca_hash_algorithm_name: "{{ winca_hash_algorithm_name | upper if _winca_certificate_options_needed else omit }}"
 _winca_key_length: "{{ winca_key_length if _winca_certificate_options_needed else omit }}"
 _winca_overwrite_existing_key: "{{ winca_overwrite_existing_key if winca_is_root_ca else omit }}"
 
