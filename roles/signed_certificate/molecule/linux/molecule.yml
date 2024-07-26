@@ -25,8 +25,12 @@ provisioner:
   inventory:
     group_vars:
       subjects:
+        cert_private_key_path: >-
+          {{ '/etc/pki/tls/private/cert.key' if ansible_os_family == 'RedHat' else '/etc/ssl/private/cert.key' }}
         cert_private_key_owner: test
         cert_private_key_group: test
+        cert_certificate_path: >-
+          {{ '/etc/pki/tls/certs/cert.crt' if ansible_os_family == 'RedHat' else '/etc/ssl/certs/cert.crt' }}
         cert_certificate_owner: test
         cert_certificate_group: test
         cert_signing_ca_hostname: ca

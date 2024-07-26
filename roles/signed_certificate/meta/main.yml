@@ -30,6 +30,7 @@ galaxy_info:
 
 collections:
   - ansible.windows
+  - trippsc2.general
 
 dependencies:
   - role: trippsc2.general.generate_csr

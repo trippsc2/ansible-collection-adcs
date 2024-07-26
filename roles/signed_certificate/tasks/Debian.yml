@@ -4,7 +4,7 @@
 
 - name: Add private key owner to ssl-cert (Debian-based)
   when:
-    - ('/etc/ssl/private' in _cert_private_key_path)
+    - ('/etc/ssl/private' in cert_private_key_path)
     - cert_private_key_owner != 'root'
   block:
     - name: Ensure ssl-cert package is installed

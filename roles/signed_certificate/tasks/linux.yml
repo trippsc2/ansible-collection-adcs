@@ -3,7 +3,7 @@
   become: true
   ansible.builtin.copy:
     content: "{{ _cert_signed_cert_content }}"
-    dest: "{{ _cert_certificate_path }}"
+    dest: "{{ cert_certificate_path }}"
     owner: "{{ cert_certificate_owner }}"
     group: "{{ cert_certificate_group }}"
     mode: "{{ cert_certificate_mode }}"

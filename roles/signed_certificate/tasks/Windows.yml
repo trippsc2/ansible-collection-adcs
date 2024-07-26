@@ -2,7 +2,7 @@
 - name: Copy signed certificate to path
   ansible.windows.win_copy:
     content: "{{ _cert_signed_cert_content }}"
-    dest: "{{ _cert_certificate_path }}"
+    dest: "{{ cert_certificate_path }}"
 
 - name: Remove CSR file
   ansible.windows.win_file:
