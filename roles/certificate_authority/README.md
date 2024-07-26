@@ -1,7 +1,7 @@
 <!-- BEGIN_ANSIBLE_DOCS -->
 
 # Ansible Role: trippsc2.adcs.certificate_authority
-Version: 1.1.5
+Version: 1.1.6
 
 This role installs and configures a Windows machine as a Active Directory Certificate Services Certification Authority.
 
@@ -38,7 +38,7 @@ This role installs and configures a Windows machine as a Active Directory Certif
 | winca_database_directory | <p>The directory to store the Certificate Authority database.</p> | str | no |  | C:\Windows\system32\CertLog |
 | winca_hash_algorithm_name | <p>The hash algorithm name to use when generating the CA key pair.</p><p>If *winca_is_root_ca* is set to `false` and *winca_certificate_type* is set to `existing`, this is ignored.</p> | str | no | <ul><li>sha256</li><li>sha384</li><li>sha512</li></ul> | sha256 |
 | winca_ignore_unicode | <p>Whether to ignore Unicode characters in the distinguished name.</p><p>If *winca_is_root_ca* is set to `false` and *winca_certificate_type* is set to `existing`, this is ignored.</p> | bool | no |  | false |
-| winca_key_length | <p>The key length to use when generating the CA key pair.</p><p>If *winca_crypto_provider_algorithm* is `rsa`, this must be one of `1024`, `2048`, or `4096`.</p><p>If *winca_crypto_provider_algorithm* is `ecdsa_p256`, this must be `256`.</p><p>If *winca_crypto_provider_algorithm* is `ecdsa_p521`, this must be `521`.</p><p>If *winca_is_root_ca* is set to `false` and *winca_certificate_type* is set to `existing`, this is ignored.</p> | int | no | <ul><li>256</li><li>521</li><li>1024</li><li>2048</li><li>4096</li></ul> | 2048 |
+| winca_key_length | <p>The key length to use when generating the CA key pair.</p><p>If *winca_crypto_provider_algorithm* is `rsa`, this must be one of `1024`, `2048`, or `4096` and defaults to `2048`.</p><p>If *winca_crypto_provider_algorithm* is `ecdsa_p256`, this must be and defaults to `256`.</p><p>If *winca_crypto_provider_algorithm* is `ecdsa_p521`, this must be and defaults to `521`.</p><p>If *winca_is_root_ca* is set to `false` and *winca_certificate_type* is set to `existing`, this is ignored.</p> | int | no | <ul><li>256</li><li>521</li><li>1024</li><li>2048</li><li>4096</li></ul> |  |
 | winca_overwrite_existing_ca_in_domain | <p>Whether to overwrite the existing Certificate Authority in the domain.</p><p>If *winca_is_ad_integrated* is set to `false`, this is ignored.</p> | bool | no |  | false |
 | winca_overwrite_existing_database | <p>Whether to overwrite an existing Certificate Authority database, if one exists.</p> | bool | no |  | false |
 | winca_overwrite_existing_key | <p>Whether to overwrite the existing CA key pair.</p><p>If *winca_is_root_ca* is set to `false`, this is ignored.</p> | bool | no |  | false |
