@@ -3,7 +3,7 @@
   become: true
   ansible.builtin.copy:
     content: "{{ _cert_signed_cert_content }}"
-    dest: "{{ cert_certificate_path }}"
+    dest: "{{ _cert_certificate_path }}"
     owner: "{{ cert_certificate_owner }}"
     group: "{{ cert_certificate_group }}"
     mode: "{{ cert_certificate_mode }}"
@@ -11,5 +11,5 @@
 - name: Remove CSR file
   become: true
   ansible.builtin.file:
-    path: "{{ cert_csr_tmp_path }}"
+    path: "{{ _cert_csr_tmp_path }}"
     state: absent

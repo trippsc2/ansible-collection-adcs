@@ -112,7 +112,6 @@ argument_specs:
       winca_key_length:
         type: int
         required: false
-        default: 2048
         choices:
           - 256
           - 521
@@ -121,9 +120,9 @@ argument_specs:
           - 4096
         description:
           - The key length to use when generating the CA key pair.
-          - If *winca_crypto_provider_algorithm* is `rsa`, this must be one of `1024`, `2048`, or `4096`.
-          - If *winca_crypto_provider_algorithm* is `ecdsa_p256`, this must be `256`.
-          - If *winca_crypto_provider_algorithm* is `ecdsa_p521`, this must be `521`.
+          - If *winca_crypto_provider_algorithm* is `rsa`, this must be one of `1024`, `2048`, or `4096` and defaults to `2048`.
+          - If *winca_crypto_provider_algorithm* is `ecdsa_p256`, this must be and defaults to `256`.
+          - If *winca_crypto_provider_algorithm* is `ecdsa_p521`, this must be and defaults to `521`.
           - If *winca_is_root_ca* is set to `false` and *winca_certificate_type* is set to `existing`, this is ignored.
       winca_overwrite_existing_ca_in_domain:
         type: bool

@@ -1,0 +1,7 @@
+---
+_winca_default_key_length: 2048
+
+_winca_allowed_key_lengths:
+  - 1024
+  - 2048
+  - 4096

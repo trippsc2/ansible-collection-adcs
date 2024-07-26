@@ -1,5 +1,5 @@
 [NewRequest]
-Subject = "CN={{ winsubca_ca_common_name }}{% if winsubca_ca_distinguished_name_suffix is defined %},{{ winsubca_ca_distinguished_name_suffix }}{% endif %}"
+Subject = "CN={{ winsubca_ca_common_name }}{{ ',' + winsubca_ca_distinguished_name_suffix | string if winsubca_ca_distinguished_name_suffix is defined }}"
 KeyUsage = "CERT_DIGITAL_SIGNATURE_KEY_USAGE | CERT_KEY_CERT_SIGN_KEY_USAGE | CERT_OFFLINE_CRL_SIGN_KEY_USAGE | CERT_CRL_SIGN_KEY_USAGE"
 ProviderName = "Microsoft Software Key Storage Provider"
 Silent = true

@@ -29,11 +29,15 @@
     fail_msg: This machine is not a domain member.
     success_msg: This machine is a domain member.
 
+- name: Include crypto provider algorithm variables
+  ansible.builtin.include_vars: "{{ winca_crypto_provider_algorithm }}.yml"
+
 - name: Validate key length
   when:
     - winca_is_root_ca or winca_certificate_type == 'enterprise_parent'
+    - winca_key_length is defined
   ansible.builtin.assert:
     that:
-      - winca_key_length | int in _winca_allowed_key_lengths_by_algorithm[winca_crypto_provider_algorithm]
-    fail_msg: "Key length for {{ winca_crypto_provider_algorithm | upper }} keys must be one of: {{ _winca_allowed_key_lengths_by_algorithm[winca_crypto_provider_algorithm] | join(', ') }}"
+      - winca_key_length | int in _winca_allowed_key_lengths
+    fail_msg: "Key length for {{ winca_crypto_provider_algorithm | upper }} keys must be one of: {{ _winca_allowed_key_lengths | join(', ') }}"
     success_msg: "{{ winca_crypto_provider_algorithm | upper }} key length of {{ winca_key_length }} is valid."

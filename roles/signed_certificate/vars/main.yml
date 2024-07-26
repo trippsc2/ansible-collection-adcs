@@ -3,3 +3,6 @@ _cert_supported_os_families:
   - Debian
   - RedHat
   - Windows
+
+_cert_certificate_path: "{{ cert_certificate_path | default(_cert_default_certificate_path) }}"
+_cert_csr_tmp_path: "{{ cert_csr_tmp_path | default(_cert_default_csr_tmp_path) }}"

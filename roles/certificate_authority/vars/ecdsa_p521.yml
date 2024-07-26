@@ -1,0 +1,5 @@
+---
+_winca_default_key_length: 521
+
+_winca_allowed_key_lengths:
+  - 521

@@ -5,7 +5,7 @@
 - name: Get contents of CSR
   become: true
   ansible.builtin.slurp:
-    src: "{{ cert_csr_tmp_path }}"
+    src: "{{ _cert_csr_tmp_path }}"
   failed_when: false
   register: _cert_csr
 
