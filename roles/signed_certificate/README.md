@@ -1,7 +1,7 @@
 <!-- BEGIN_ANSIBLE_DOCS -->
 
 # Ansible Role: trippsc2.adcs.signed_certificate
-Version: 1.2.0
+Version: 1.2.1
 
 This role issues a certificate from a AD CS Certification Authority.
 
@@ -22,6 +22,7 @@ This role issues a certificate from a AD CS Certification Authority.
 | Collection |
 | ---------- |
 | ansible.windows |
+| trippsc2.general |
 
 ## Role Arguments
 |Option|Description|Type|Required|Choices|Default|
