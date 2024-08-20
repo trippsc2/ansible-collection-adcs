@@ -12,6 +12,8 @@ platforms:
     box: jtarpley/${MOLECULE_BOX:-w2022_cis}
     memory: 2048
     cpus: 2
+    provider_options:
+      default_prefix: adcs_certificate_authority_
     groups:
       - windows
       - windows_domain
@@ -19,6 +21,8 @@ platforms:
     box: jtarpley/${MOLECULE_BOX:-w2022_cis}
     memory: 2048
     cpus: 2
+    provider_options:
+      default_prefix: adcs_certificate_authority_
     groups:
       - enterprise_ca
       - root_ca
@@ -30,6 +34,8 @@ platforms:
     box: jtarpley/${MOLECULE_BOX:-w2022_cis}
     memory: 2048
     cpus: 2
+    provider_options:
+      default_prefix: adcs_certificate_authority_
     groups:
       - enterprise_ca
       - subordinate_ca
@@ -41,6 +47,8 @@ platforms:
     box: jtarpley/${MOLECULE_BOX:-w2022_cis}
     memory: 2048
     cpus: 2
+    provider_options:
+      default_prefix: adcs_certificate_authority_
     groups:
       - root_ca
       - standalone_ca
@@ -51,6 +59,8 @@ platforms:
     box: jtarpley/${MOLECULE_BOX:-w2022_cis}
     memory: 2048
     cpus: 2
+    provider_options:
+      default_prefix: adcs_certificate_authority_
     groups:
       - subordinate_ca
       - standalone_ca

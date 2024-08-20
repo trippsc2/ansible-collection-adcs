@@ -12,12 +12,16 @@ platforms:
     box: jtarpley/w2022_cis
     memory: 2048
     cpus: 2
+    provider_options:
+      default_prefix: adcs_signed_certificate_win_
     groups:
       - windows
   - name: win
     box: jtarpley/${MOLECULE_BOX:-w2022_cis}
     memory: 2048
     cpus: 2
+    provider_options:
+      default_prefix: adcs_signed_certificate_win_
     groups:
       - subjects
       - windows

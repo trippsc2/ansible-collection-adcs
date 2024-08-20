@@ -10,7 +10,7 @@
     - windows_domain_members
   gather_facts: false
   roles:
-    - role: trippsc2.ad.testing_domain_member
+    - role: trippsc2.ad.testing_win_member
 
 - name: Prepare standalone
   hosts:

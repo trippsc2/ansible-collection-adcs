@@ -12,12 +12,16 @@ platforms:
     box: jtarpley/w2022_cis
     memory: 2048
     cpus: 2
+    provider_options:
+      default_prefix: adcs_signed_certificate_linux_
     groups:
       - windows
   - name: linux
     box: jtarpley/${MOLECULE_BOX:-rocky8_cis}
     memory: 2048
     cpus: 2
+    provider_options:
+      default_prefix: adcs_signed_certificate_linux_
     groups:
       - subjects
 provisioner:
