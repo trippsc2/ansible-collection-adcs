@@ -13,7 +13,7 @@ tags: []
 
 dependencies:
   ansible.windows: ">=1.0.0"
-  community.windows: ">=1.11.0"
+  community.windows: ">=1.0.0"
   trippsc2.general: ">=2.4.0"
   trippsc2.windows: ">=1.0.0"
 

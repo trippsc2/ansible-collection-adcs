@@ -14,7 +14,7 @@
     certreq.exe -new -machine -q {{ winsubca_request_config_file_temp_path }} {{ winsubca_request_file_temp_path }}
 
 - name: Get CSR contents
-  ansible.windows.slurp:
+  ansible.builtin.slurp:
     src: "{{ winsubca_request_file_temp_path }}"
   register: _winsubca_request_content
 
@@ -69,7 +69,7 @@
         state: absent
 
     - name: Get root certificate file contents
-      ansible.windows.slurp:
+      ansible.builtin.slurp:
         src: "{{ winsubca_rootca_file_path }}"
       register: _winsubca_signing_ca_cert
 
