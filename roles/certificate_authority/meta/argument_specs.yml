@@ -48,6 +48,7 @@ argument_specs:
       winca_password:
         type: str
         required: true
+        no_log: true
         description:
           - The password for the `winca_username` account.
       winca_ca_cert_common_name:
