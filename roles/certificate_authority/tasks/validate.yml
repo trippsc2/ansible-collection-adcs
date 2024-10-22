@@ -9,7 +9,6 @@
       - '!all'
       - '!min'
       - distribution
-      - os_family
       - windows_domain
 
 - name: Validate OS

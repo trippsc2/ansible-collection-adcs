@@ -1,7 +1,7 @@
 <!-- BEGIN_ANSIBLE_DOCS -->
 
 # Ansible Role: trippsc2.adcs.certificate_authority
-Version: 1.2.2
+Version: 1.2.3
 
 This role installs and configures a Windows machine as a Active Directory Certificate Services Certification Authority.
 
