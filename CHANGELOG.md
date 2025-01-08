@@ -131,6 +131,6 @@ All notable changes to this project will be documented in this file.
 ### Collection
 
 - Initial release.
-- *trippsc2.adcs.certificate_authority* role added.
-- *trippsc2.adcs.signed_certificate* role added.
-- *trippsc2.adcs.sub_ca_certificate* role added.
+- *certificate_authority* role added.
+- *signed_certificate* role added.
+- *sub_ca_certificate* role added.
