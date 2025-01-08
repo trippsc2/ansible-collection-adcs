@@ -1,7 +1,7 @@
 ---
 namespace: trippsc2
 name: adcs
-version: 1.2.3
+version: 1.2.4
 readme: README.md
 authors:
   - Jim Tarpley
@@ -9,7 +9,10 @@ description: This collection contains modules and roles for configuring Active D
 
 license_file: 'LICENSE'
 
-tags: []
+tags:
+  - infrastructure
+  - security
+  - windows
 
 dependencies:
   ansible.windows: ">=1.0.0"
