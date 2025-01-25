@@ -131,20 +131,25 @@ provisioner:
         ansible_become_method: runas
         ansible_become_user: SYSTEM
         ansible_password: vagrant
-        ansible_ssh_common_args: '-o PreferredAuthentications=password -o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o ControlMaster=auto -o ControlPersist=60s -o ForwardX11=no -o LogLevel=ERROR -o StrictHostKeyChecking=no'
     host_vars:
+      dc:
+        ansible_ssh_common_args: '-o PreferredAuthentications=password -o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o ControlMaster=auto -o ControlPersist=60s -o ForwardX11=no -o LogLevel=ERROR -o StrictHostKeyChecking=no'
       erootca:
         ansible_user: TEST\vagrant
+        ansible_ssh_common_args: '-o PreferredAuthentications=password -o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o ControlMaster=auto -o ControlPersist=60s -o ForwardX11=no -o LogLevel=ERROR -o StrictHostKeyChecking=no'
       esubca:
         ansible_user: TEST\vagrant
+        ansible_ssh_common_args: '-o PreferredAuthentications=password -o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o ControlMaster=auto -o ControlPersist=60s -o ForwardX11=no -o LogLevel=ERROR -o StrictHostKeyChecking=no'
         winca_certificate_type: enterprise_parent
         winca_parent_ca_config: erootca.test.loc\erootca
       srootca:
+        ansible_ssh_common_args: '-o PreferredAuthentications=password -o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o ControlMaster=auto -o ControlPersist=60s -o ForwardX11=no -o LogLevel=ERROR -o StrictHostKeyChecking=no'
         winca_crl_publication_urls:
           - 65:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl
           - 6:http://srootca.test.loc/CertEnroll/%3%8%9.crl
           - 6:file://srootca.test.loc/CertEnroll/%3%8%9.crl
       ssubca:
+        ansible_ssh_common_args: '-o PreferredAuthentications=password -o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o ControlMaster=auto -o ControlPersist=60s -o ForwardX11=no -o LogLevel=ERROR -o StrictHostKeyChecking=no'
         winsubca_ca_common_name: "{{ winca_ca_cert_common_name }}"
         winsubca_ca_distinguished_name_suffix: "{{ winca_ca_distinguished_name_suffix }}"
         winsubca_signing_ca_hostname: srootca

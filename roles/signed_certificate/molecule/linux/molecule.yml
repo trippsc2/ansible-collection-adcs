@@ -46,9 +46,9 @@ provisioner:
         ansible_become_method: runas
         ansible_become_user: SYSTEM
         ansible_password: vagrant
-        ansible_ssh_common_args: '-o PreferredAuthentications=password -o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o ControlMaster=auto -o ControlPersist=60s -o ForwardX11=no -o LogLevel=ERROR -o StrictHostKeyChecking=no'
     host_vars:
       ca:
+        ansible_ssh_common_args: '-o PreferredAuthentications=password -o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o ControlMaster=auto -o ControlPersist=60s -o ForwardX11=no -o LogLevel=ERROR -o StrictHostKeyChecking=no'
         winca_install_management_tools: true
         winca_is_root_ca: true
         winca_is_ad_integrated: false
