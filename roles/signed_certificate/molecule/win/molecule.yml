@@ -40,6 +40,8 @@ provisioner:
         ansible_shell_type: powershell
         ansible_become_method: runas
         ansible_become_user: SYSTEM
+        ansible_password: vagrant
+        ansible_ssh_common_args: '-o PreferredAuthentications=password -o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o ControlMaster=auto -o ControlPersist=60s -o ForwardX11=no -o LogLevel=ERROR -o StrictHostKeyChecking=no'
     host_vars:
       ca:
         winca_install_management_tools: true
