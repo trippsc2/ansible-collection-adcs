@@ -27,7 +27,7 @@ manifest:
     - recursive-include roles/* *.md
     - recursive-include roles/*/files **
     - exclude galaxy.yml galaxy.yaml MANIFEST.json FILES.json *.tar.gz
-    - recursive-exclude tests **
+    - recursive-exclude tests/output **
     - recursive-exclude roles/*/molecule **
     - recursive-exclude molecule **
     - global-exclude /.* /__pycache__
