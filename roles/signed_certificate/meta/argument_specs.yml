@@ -3,9 +3,15 @@ argument_specs:
   main:
     short_description: Active Directory Certificate Services Signed Certificate
     description:
-      - This role issues a certificate from a AD CS Certification Authority.
+      - This role generates a self-signed TLS certificate.
+      - The role depends on the `trippsc2.general.generate_csr` role to generate a private key and CSR.
+      - |
+        The role does the following:
+          - Runs the `trippsc2.general.generate_csr` role to generate a private key and CSR, if needed.
+          - If the private key and CSR are generated, the role signs the CSR with the AD CS certification authority and stores it in the `cert_certificate_content` variable.
+          - Optionally, the role will save the certificate to a file.
     author:
-      - Jim Tarpley
+      - Jim Tarpley (@trippsc2)
     options:
       cert_signing_ca_hostname:
         type: str
@@ -15,7 +21,7 @@ argument_specs:
       cert_signing_ca_csr_path:
         type: path
         required: false
-        default: C:\Windows\temp\server.req
+        default: "C:\\Windows\\temp\\{{ inventory_hostname }}.req"
         description:
           - The path to the Certificate Signing Request (CSR) file to sign.
       cert_signing_ca_fqdn:
@@ -44,6 +50,20 @@ argument_specs:
         default: "\\n"
         description:
           - The line break character to use in the certificate.
+      cert_certificate_to_file:
+        type: bool
+        required: false
+        default: true
+        description:
+          - Whether to save the certificate to a file.
+          - If set to `true`, the certificate will be saved to the `cert_certificate_path` path.
+      cert_certificate_to_variable:
+        type: bool
+        required: false
+        default: false
+        description:
+          - Whether to save the certificate to a variable.
+          - If set to `true`, the certificate will be saved to the `cert_certificate_content` variable.
       cert_certificate_owner:
         type: str
         required: false

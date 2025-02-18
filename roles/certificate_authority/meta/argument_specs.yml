@@ -5,7 +5,7 @@ argument_specs:
     description:
       - This role installs and configures a Windows machine as a Active Directory Certificate Services Certification Authority.
     author:
-      - Jim Tarpley
+      - Jim Tarpley (@trippsc2)
     options:
       winca_is_root_ca:
         type: bool

@@ -1,13 +1,21 @@
 ---
 galaxy_info:
-  author: Jim Tarpley
+  author: Jim Tarpley (@trippsc2)
   namespace: trippsc2
   role_name: signed_certificate
-  description: This role issues a certificate from a AD CS Certification Authority.
+  description: |
+    This role generates a self-signed TLS certificate.
+
+    The role depends on the `trippsc2.general.generate_csr` role to generate a private key and CSR.
+
+    The role does the following:
+      - Runs the `trippsc2.general.generate_csr` role to generate a private key and CSR, if needed.
+      - If the private key and CSR are generated, the role signs the CSR with the AD CS certification authority and stores it in the `cert_certificate_content` variable.
+      - Optionally, the role will save the certificate to a file.
 
   license: MIT
 
-  min_ansible_version: '2.15'
+  min_ansible_version: '2.16'
 
   platforms:
     - name: Debian

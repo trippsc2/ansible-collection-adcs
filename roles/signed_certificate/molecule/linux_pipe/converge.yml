@@ -1,0 +1,53 @@
+---
+- name: Converge
+  hosts:
+    - subjects
+  pre_tasks:
+    - name: Gathering facts (ca)
+      delegate_to: ca
+      delegate_facts: true
+      ansible.builtin.setup:
+
+    - name: Check if existing certificate exists
+      become: true
+      ansible.builtin.stat:
+        path: "{{ _cert_certificate_path }}"
+      register: _cert_info
+
+    - name: Get contents of certificate from file
+      when:
+        - _cert_info.stat.exists
+      block:
+        - name: Get certificate contents
+          become: true
+          ansible.builtin.slurp:
+            src: "{{ _cert_certificate_path }}"
+          register: _cert_contents
+
+        - name: Set certificate contents
+          ansible.builtin.set_fact:
+            cert_existing_certificate_content: "{{ _cert_contents.content | b64decode }}"
+  roles:
+    - role: trippsc2.adcs.signed_certificate
+  tasks:
+    - name: Copy private key to file
+      when:
+        - cert_private_key_content | default('') != ''
+      become: true
+      ansible.builtin.copy:
+        content: "{{ cert_private_key_content }}"
+        dest: "{{ _cert_private_key_path }}"
+        owner: test
+        group: test
+        mode: '0600'
+
+    - name: Copy certificate to file
+      when:
+        - cert_certificate_content | default('') != ''
+      become: true
+      ansible.builtin.copy:
+        content: "{{ cert_certificate_content }}"
+        dest: "{{ _cert_certificate_path }}"
+        owner: test
+        group: test
+        mode: '0644'

@@ -4,4 +4,4 @@ _cert_supported_os_families:
   - RedHat
   - Windows
 
-_cert_csr_tmp_path: "{{ cert_csr_tmp_path | default(_cert_default_csr_tmp_path) }}"
+_cert_csr_path: "{{ cert_csr_path | default(_cert_default_csr_tmp_path) }}"

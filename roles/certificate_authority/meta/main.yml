@@ -1,13 +1,13 @@
 ---
 galaxy_info:
-  author: Jim Tarpley
+  author: Jim Tarpley (@trippsc2)
   namespace: trippsc2
   role_name: certification_authority
   description: This role installs and configures a Windows machine as a Active Directory Certificate Services Certification Authority.
 
   license: MIT
 
-  min_ansible_version: '2.15'
+  min_ansible_version: '2.16'
 
   platforms:
     - name: Windows

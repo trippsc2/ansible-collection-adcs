@@ -1,15 +1,30 @@
 ---
 - name: Copy signed certificate to path
+  when:
+    - cert_certificate_to_file
+    - cert_certificate_content | default('') != ''
   become: true
   ansible.builtin.copy:
-    content: "{{ _cert_signed_cert_content }}"
+    content: "{{ cert_certificate_content }}"
     dest: "{{ cert_certificate_path }}"
     owner: "{{ cert_certificate_owner }}"
     group: "{{ cert_certificate_group }}"
     mode: "{{ cert_certificate_mode }}"
 
+- name: Clear signed certificate variable
+  when:
+    - not cert_certificate_to_variable
+  ansible.builtin.set_fact:
+    cert_certificate_content: ''
+
 - name: Remove CSR file
+  when:
+    - cert_csr_to_file
   become: true
   ansible.builtin.file:
-    path: "{{ _cert_csr_tmp_path }}"
+    path: "{{ _cert_csr_path }}"
     state: absent
+
+- name: Clear CSR variable
+  ansible.builtin.set_fact:
+    cert_csr_content: ''

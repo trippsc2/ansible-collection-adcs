@@ -4,7 +4,7 @@ argument_specs:
     short_description: Active Directory Certificate Services Subordinate Certification Authority Certificate
     description:
       - This role signs a subordinate CA certificate on a Windows machine.
-    author: Jim Tarpley
+    author: Jim Tarpley (@trippsc2)
     options:
       winsubca_renewal_days:
         type: int

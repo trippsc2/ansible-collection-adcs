@@ -1,0 +1,99 @@
+---
+- name: Verify
+  hosts:
+    - subjects
+  tasks:
+    - name: Set file path variables | Debian-based
+      when:
+        - ansible_os_family == 'Debian'
+      ansible.builtin.set_fact:
+        _private_key_path: /etc/ssl/private/cert.key
+        _certificate_path: /etc/ssl/certs/cert.crt
+
+    - name: Set file path variables | EL
+      when:
+        - ansible_os_family == 'RedHat'
+      ansible.builtin.set_fact:
+        _private_key_path: /etc/pki/tls/private/cert.key
+        _certificate_path: /etc/pki/tls/certs/cert.crt
+
+    - name: Get private key file info
+      become: true
+      ansible.builtin.stat:
+        path: "{{ _private_key_path }}"
+      register: _private_key_info
+
+    - name: Get certificate file info
+      become: true
+      ansible.builtin.stat:
+        path: "{{ _certificate_path }}"
+      register: _certificate_info
+
+    - name: Get CSR file info
+      become: true
+      ansible.builtin.stat:
+        path: /tmp/cert.csr
+      register: _csr_info
+
+    - name: Verify that private key exists
+      ansible.builtin.assert:
+        that:
+          - _private_key_info.stat.exists
+        fail_msg: Private key file does not exist.
+        success_msg: Private key file exists.
+
+    - name: Verify private key owner
+      ansible.builtin.assert:
+        that:
+          - _private_key_info.stat.pw_name == 'test'
+        fail_msg: Private key file does not have expected owner.
+        success_msg: Private key file has expected owner.
+
+    - name: Verify private key group
+      ansible.builtin.assert:
+        that:
+          - _private_key_info.stat.gr_name == 'test'
+        fail_msg: Private key file does not have expected group.
+        success_msg: Private key file has expected group.
+
+    - name: Verify private key mode
+      ansible.builtin.assert:
+        that:
+          - _private_key_info.stat.mode == '0600'
+        fail_msg: Private key file does not have expected mode.
+        success_msg: Private key file has expected mode.
+
+    - name: Verify that certificate exists
+      ansible.builtin.assert:
+        that:
+          - _certificate_info.stat.exists
+        fail_msg: Certificate file does not exist.
+        success_msg: Certificate file exists.
+
+    - name: Verify certificate owner
+      ansible.builtin.assert:
+        that:
+          - _certificate_info.stat.pw_name == 'test'
+        fail_msg: Certificate file does not have expected owner.
+        success_msg: Certificate file has expected owner.
+
+    - name: Verify certificate group
+      ansible.builtin.assert:
+        that:
+          - _certificate_info.stat.gr_name == 'test'
+        fail_msg: Certificate file does not have expected group.
+        success_msg: Certificate file has expected group.
+
+    - name: Verify certificate mode
+      ansible.builtin.assert:
+        that:
+          - _certificate_info.stat.mode == '0644'
+        fail_msg: Certificate file does not have expected mode.
+        success_msg: Certificate file has expected mode.
+
+    - name: Verify that CSR file is not present
+      ansible.builtin.assert:
+        that:
+          - not _csr_info.stat.exists
+        fail_msg: CSR file still exists.
+        success_msg: CSR file does not exist as expected.

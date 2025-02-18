@@ -1,17 +1,13 @@
 ---
+cert_certificate_to_file: true
+cert_certificate_to_variable: false
 cert_certificate_owner: root
 cert_certificate_group: root
 cert_certificate_mode: '0644'
 
 cert_signing_ca_fqdn: "{{ hostvars[cert_signing_ca_hostname].ansible_fqdn }}"
 cert_signing_ca_config: "{{ cert_signing_ca_fqdn }}\\{{ cert_signing_ca_common_name }}"
-cert_signing_ca_csr_path: C:\Windows\temp\server.req
+cert_signing_ca_csr_path: "C:\\Windows\\temp\\{{ inventory_hostname }}.req"
 cert_line_break_character: "\n"
 
-cert_import_to_windows_cert_store: false
-cert_temp_pkcs12_path: C:\Windows\Temp\temp.pfx
-cert_windows_cert_store_name: My
-cert_windows_cert_store_location: LocalMachine
-cert_windows_cert_store_type: system
-cert_windows_cert_key_storage: machine
-cert_windows_cert_key_exportable: false
+cert_csr_to_file: true

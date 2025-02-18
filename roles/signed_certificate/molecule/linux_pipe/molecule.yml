@@ -13,7 +13,7 @@ platforms:
     memory: 2048
     cpus: 2
     provider_options:
-      default_prefix: adcs_signed_certificate_linux_
+      default_prefix: adcs_signed_certificate_linux_pipe_
     groups:
       - windows
   - name: linux
@@ -21,7 +21,7 @@ platforms:
     memory: 2048
     cpus: 2
     provider_options:
-      default_prefix: adcs_signed_certificate_linux_
+      default_prefix: adcs_signed_certificate_linux_pipe_
     groups:
       - subjects
 provisioner:
@@ -29,14 +29,15 @@ provisioner:
   inventory:
     group_vars:
       subjects:
-        cert_private_key_path: >-
+        _cert_private_key_path: >-
           {{ '/etc/pki/tls/private/cert.key' if ansible_os_family == 'RedHat' else '/etc/ssl/private/cert.key' }}
-        cert_certificate_path: >-
+        _cert_certificate_path: >-
           {{ '/etc/pki/tls/certs/cert.crt' if ansible_os_family == 'RedHat' else '/etc/ssl/certs/cert.crt' }}
-        cert_private_key_owner: test
-        cert_private_key_group: test
-        cert_certificate_owner: test
-        cert_certificate_group: test
+        cert_private_key_to_file: false
+        cert_private_key_to_variable: true
+        cert_certificate_to_file: false
+        cert_certificate_to_variable: true
+        cert_existing_certificate_type: pipe
         cert_signing_ca_hostname: ca
         cert_signing_ca_fqdn: ca
         cert_signing_ca_common_name: RootCA

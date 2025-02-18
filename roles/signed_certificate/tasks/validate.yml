@@ -1,0 +1,43 @@
+---
+- name: Include OS family variables
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Validate certificate path is defined
+  when:
+    - cert_certificate_to_file
+  ansible.builtin.assert:
+    that:
+      - cert_certificate_path is defined
+    fail_msg: Certificate path is not defined.
+    success_msg: Certificate path is defined.
+
+- name: Validate certificate owner user exists
+  when:
+    - cert_certificate_to_file
+    - ansible_os_family != 'Windows'
+  ansible.builtin.assert:
+    that:
+      - cert_certificate_owner in getent_passwd.keys()
+    fail_msg: "User '{{ cert_certificate_owner }}' does not exist."
+    success_msg: "User '{{ cert_certificate_owner }}' exists."
+
+- name: Validate certificate group exists
+  when:
+    - cert_certificate_to_file
+    - ansible_os_family != 'Windows'
+  ansible.builtin.assert:
+    that:
+      - cert_certificate_group in getent_group.keys()
+    fail_msg: "Group '{{ cert_certificate_group }}' does not exist."
+    success_msg: "Group '{{ cert_certificate_group }}' exists."
+
+- name: Validate certificate is being output
+  ansible.builtin.assert:
+    that:
+      - cert_certificate_to_file or cert_certificate_to_variable
+    fail_msg: Certificate must be output to a file, to a variable, or both.
+    success_msg: Certificate is being output.
+
+- name: Clear certificate content
+  ansible.builtin.set_fact:
+    cert_certificate_content: ''

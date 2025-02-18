@@ -1,10 +1,19 @@
 ---
 - name: Copy signed certificate to path
+  when:
+    - cert_certificate_to_file
+    - cert_certificate_content | default('') != ''
   ansible.windows.win_copy:
-    content: "{{ _cert_signed_cert_content }}"
+    content: "{{ cert_certificate_content }}"
     dest: "{{ cert_certificate_path }}"
 
 - name: Remove CSR file
+  when:
+    - cert_csr_to_file
   ansible.windows.win_file:
-    path: "{{ _cert_csr_tmp_path }}"
+    path: "{{ _cert_csr_path }}"
     state: absent
+
+- name: Clear CSR variable
+  ansible.builtin.set_fact:
+    cert_csr_content: ''
