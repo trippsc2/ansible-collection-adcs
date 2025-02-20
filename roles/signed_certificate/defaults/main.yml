@@ -9,5 +9,3 @@ cert_signing_ca_fqdn: "{{ hostvars[cert_signing_ca_hostname].ansible_fqdn }}"
 cert_signing_ca_config: "{{ cert_signing_ca_fqdn }}\\{{ cert_signing_ca_common_name }}"
 cert_signing_ca_csr_path: "C:\\Windows\\temp\\{{ inventory_hostname }}.req"
 cert_line_break_character: "\n"
-
-cert_csr_to_file: true

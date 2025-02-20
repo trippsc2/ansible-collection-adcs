@@ -7,13 +7,6 @@
     content: "{{ cert_certificate_content }}"
     dest: "{{ cert_certificate_path }}"
 
-- name: Remove CSR file
-  when:
-    - cert_csr_to_file
-  ansible.windows.win_file:
-    path: "{{ _cert_csr_path }}"
-    state: absent
-
 - name: Clear CSR variable
   ansible.builtin.set_fact:
     cert_csr_content: ''

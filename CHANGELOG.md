@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2025-02-20
+
+### signed_certificate Role
+
+- Added support for Nobara Linux to allow for local testing of the role in certain contexts.
+- Removed all support for CSR to file.  If this is needed, copy the contents of `cert_csr_content` to a file using a task.
+
 ## [1.3.0] - 2025-02-18
 
 ### signed_certificate Role
