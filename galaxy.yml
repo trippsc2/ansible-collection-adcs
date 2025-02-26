@@ -4,7 +4,7 @@ name: adcs
 version: 1.4.0
 readme: README.md
 authors:
-  - Jim Tarpley
+  - Jim Tarpley (@trippsc2)
 description: This collection contains modules and roles for configuring Active Directory Certificate Services.
 
 license_file: 'LICENSE'
