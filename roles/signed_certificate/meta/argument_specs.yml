@@ -44,6 +44,25 @@ argument_specs:
         description:
           - The configuration of the Certificate Authority to sign the certificate.
           - This variable is only used if the `cert_signing_ca_fqdn` and `cert_signing_ca_common_name` options are not defined.
+      cert_signing_ca_user:
+        type: str
+        required: false
+        description:
+          - The username to use when connecting to the Certificate Authority.
+          - This overrides the `ansible_user` variable.
+      cert_signing_ca_password:
+        type: str
+        no_log: true
+        required: false
+        description:
+          - The password to use when connecting to the Certificate Authority.
+          - This overrides the `ansible_password` variable.
+      cert_signing_ca_shell_type:
+        type: str
+        required: false
+        description:
+          - The shell to use when connecting to the Certificate Authority.
+          - This overrides the `ansible_shell_type` variable.
       cert_line_break_character:
         type: str
         required: false

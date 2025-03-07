@@ -6,12 +6,20 @@
     - name: Gather CA facts
       delegate_to: "{{ cert_signing_ca_hostname }}"
       delegate_facts: true
+      vars:
+        ansible_user: "{{ cert_signing_ca_user | default(omit) }}"
+        ansible_password: "{{ cert_signing_ca_password | default(omit) }}"
+        ansible_shell_type: "{{ cert_signing_ca_shell_type | default(omit) }}"
       ansible.builtin.setup:
         filter:
           - ansible_fqdn
 
     - name: Sign certificate with AD CA
       delegate_to: "{{ cert_signing_ca_hostname }}"
+      vars:
+        ansible_user: "{{ cert_signing_ca_user | default(omit) }}"
+        ansible_password: "{{ cert_signing_ca_password | default(omit) }}"
+        ansible_shell_type: "{{ cert_signing_ca_shell_type | default(omit) }}"
       block:
         - name: Transfer CSR to signing CA
           ansible.windows.win_copy:

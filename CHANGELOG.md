@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.1] - 2025-03-07
+
+### Role - signed_certificate
+
+- Added variables to allow for the `ansible_user`, `ansible_password`, and `ansible_shell_type` variables to be overridden when connecting to the AD CS server.
+
 ## [1.4.0] - 2025-02-20
 
 ### Role - signed_certificate

@@ -1,7 +1,7 @@
 <!-- BEGIN_ANSIBLE_DOCS -->
 
 # Ansible Role: trippsc2.adcs.signed_certificate
-Version: 1.4.0
+Version: 1.4.1
 
 This role generates a self-signed TLS certificate.
 
@@ -40,6 +40,9 @@ The role does the following:
 | cert_signing_ca_fqdn | <p>The Fully Qualified Domain Name (FQDN) of the Certificate Authority to sign the certificate.</p><p>This variable is only used if the `cert_signing_ca_config` option is not defined.</p> | str | no |  | {{ hostvars[cert_signing_ca_hostname].ansible_fqdn }} |
 | cert_signing_ca_common_name | <p>The Common Name (CN) of the Certificate Authority to sign the certificate.</p><p>This variable is only used if the `cert_signing_ca_config` option is not defined.</p> | str | no |  |  |
 | cert_signing_ca_config | <p>The configuration of the Certificate Authority to sign the certificate.</p><p>This variable is only used if the `cert_signing_ca_fqdn` and `cert_signing_ca_common_name` options are not defined.</p> | str | no |  | {{ cert_signing_ca_fqdn }}\{{ cert_signing_ca_common_name }} |
+| cert_signing_ca_user | <p>The username to use when connecting to the Certificate Authority.</p><p>This overrides the `ansible_user` variable.</p> | str | no |  |  |
+| cert_signing_ca_password | <p>The password to use when connecting to the Certificate Authority.</p><p>This overrides the `ansible_password` variable.</p> | str | no |  |  |
+| cert_signing_ca_shell_type | <p>The shell to use when connecting to the Certificate Authority.</p><p>This overrides the `ansible_shell_type` variable.</p> | str | no |  |  |
 | cert_line_break_character | <p>The line break character to use in the certificate.</p> | str | no |  | \n |
 | cert_certificate_to_file | <p>Whether to save the certificate to a file.</p><p>If set to `true`, the certificate will be saved to the `cert_certificate_path` path.</p> | bool | no |  | True |
 | cert_certificate_to_variable | <p>Whether to save the certificate to a variable.</p><p>If set to `true`, the certificate will be saved to the `cert_certificate_content` variable.</p> | bool | no |  | False |
