@@ -1,7 +1,7 @@
 <!-- BEGIN_ANSIBLE_DOCS -->
 
 # Ansible Role: trippsc2.adcs.sub_ca_certificate
-Version: 1.4.1
+Version: 1.4.2
 
 This role signs a subordinate CA certificate on a Windows machine.
 
@@ -9,7 +9,7 @@ This role signs a subordinate CA certificate on a Windows machine.
 
 | Platform | Versions |
 | -------- | -------- |
-| Windows | <ul><li>2019</li><li>2022</li></ul> |
+| Windows | <ul><li>2025</li><li>2022</li><li>2019</li></ul> |
 
 ## Dependencies
 

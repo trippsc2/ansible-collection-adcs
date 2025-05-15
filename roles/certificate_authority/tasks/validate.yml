@@ -9,13 +9,14 @@
       - '!all'
       - '!min'
       - distribution
+      - os_family
       - windows_domain
 
-- name: Validate OS
+- name: Validate Windows Server
   ansible.builtin.assert:
     that:
       - ansible_os_family == 'Windows'
-      - ansible_distribution | regex_search('(Windows Server)')
+      - ('Windows Server' in ansible_distribution)
     fail_msg: "This role can only be run on a Windows Server system.  {{ ansible_distribution }} is not supported."
     success_msg: "This role is running on {{ ansible_distribution }}."
 

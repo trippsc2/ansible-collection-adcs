@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.2] - 2025-05-15
+
+### Role - signed_certificate
+
+- Changed OS validation.
+
 ## [1.4.1] - 2025-03-07
 
 ### Role - signed_certificate

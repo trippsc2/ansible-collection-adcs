@@ -33,6 +33,9 @@ provisioner:
         _cert_certificate_path: C:\Windows\Temp\cert.crt
         _cert_private_key_path: C:\Windows\Temp\cert.key
         cert_signing_ca_hostname: ca
+        cert_signing_ca_user: vagrant
+        cert_signing_ca_password: vagrant
+        cert_signing_ca_shell_type: powershell
         cert_signing_ca_fqdn: ca
         cert_signing_ca_common_name: RootCA
         cert_signing_ca_csr_path: "C:\\Windows\\Temp\\{{ inventory_hostname }}.csr"
