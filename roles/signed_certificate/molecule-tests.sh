@@ -20,12 +20,6 @@ MOLECULE_BOX="fedora42_base" molecule test -s linux_pipe
 MOLECULE_BOX="ubuntu2404_base" molecule test -s linux
 MOLECULE_BOX="ubuntu2404_base" molecule test -s linux_pipe
 
-MOLECULE_BOX="rocky8_cis" molecule test -s linux
-MOLECULE_BOX="rocky8_cis" molecule test -s linux_pipe
-
-MOLECULE_BOX="fedora41_base" molecule test -s linux
-MOLECULE_BOX="fedora41_base" molecule test -s linux_pipe
-
 MOLECULE_BOX="w2019_cis" molecule test -s win
 MOLECULE_BOX="w2019_cis" molecule test -s win_pipe
 
@@ -37,6 +31,12 @@ MOLECULE_BOX="w11_23h2_base" molecule test -s win_pipe
 
 MOLECULE_BOX="w10_22h2_base" molecule test -s win
 MOLECULE_BOX="w10_22h2_base" molecule test -s win_pipe
+
+MOLECULE_BOX="fedora41_base" molecule test -s linux
+MOLECULE_BOX="fedora41_base" molecule test -s linux_pipe
+
+MOLECULE_BOX="rocky8_cis" molecule test -s linux
+MOLECULE_BOX="rocky8_cis" molecule test -s linux_pipe
 
 MOLECULE_BOX="ubuntu2204_base" molecule test -s linux
 MOLECULE_BOX="ubuntu2204_base" molecule test -s linux_pipe
