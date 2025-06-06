@@ -1,0 +1,16 @@
+---
+name: Release collection
+'on':
+  push:
+    tags:
+      - '*'
+defaults:
+  run:
+    working-directory: 'trippsc2.adcs'
+jobs:
+  release:
+    name: Release
+    uses: trippsoft/github-actions/.github/workflows/release.yml@main
+    with:
+      working_directory: 'trippsc2.adcs'
+    secrets: inherit

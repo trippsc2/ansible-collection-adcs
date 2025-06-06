@@ -1,0 +1,32 @@
+---
+name: Generate Role Docs - certificate_authority role
+'on':
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/docs-certificate_authority.yml
+      - roles/certificate_authority/.aar_doc.yml
+      - roles/certificate_authority/meta/argument_specs.yml
+      - roles/certificate_authority/meta/main.yml
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/docs-certificate_authority.yml
+      - roles/certificate_authority/.aar_doc.yml
+      - roles/certificate_authority/meta/argument_specs.yml
+      - roles/certificate_authority/meta/main.yml
+defaults:
+  run:
+    working-directory: 'trippsc2.adcs'
+jobs:
+  docs:
+    name: Generate certificate_authority role documentation
+    permissions:
+      contents: write
+    uses: trippsoft/github-actions/.github/workflows/role-docs.yml@main
+    with:
+      working_directory: 'trippsc2.adcs'
+      role_name: 'certificate_authority'

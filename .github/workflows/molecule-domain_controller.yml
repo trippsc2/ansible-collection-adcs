@@ -1,0 +1,165 @@
+---
+name: Molecule - signed_certificate role
+'on':
+  workflow_call: {}
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+    paths:
+      - galaxy.yml
+      - roles/signed_certificate/**
+      - '!roles/signed_certificate/.aar_doc.yml'
+      - '!roles/signed_certificate/README.md'
+      - '!roles/signed_certificate/meta/argument_specs.yml'
+      - '!roles/signed_certificate/meta/main.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - galaxy.yml
+      - roles/signed_certificate/**
+      - '!roles/signed_certificate/.aar_doc.yml'
+      - '!roles/signed_certificate/README.md'
+      - '!roles/signed_certificate/meta/argument_specs.yml'
+      - '!roles/signed_certificate/meta/main.yml'
+defaults:
+  run:
+    working-directory: 'trippsc2.adcs'
+jobs:
+  molecule_linux:
+    name: Run Molecule tests - Linux to file
+    runs-on:
+      - self-hosted
+      - linux
+      - x64
+    strategy:
+      fail-fast: false
+      matrix:
+        box:
+          - debian12_base
+          - fedora42_base
+          - fedora41_base
+          - rocky9_cis
+          - rocky8_cis
+          - ubuntu2404_base
+          - ubuntu2204_base
+          - ubuntu2004_base
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: 'trippsc2.adcs'
+      - name: Run Molecule tests
+        run: |
+          source ~/venv/ansible-2.16/bin/activate
+          rm -rf ~/.ansible/collections/ansible_collections/*
+          cd ./roles/signed_certificate
+          molecule test -s linux
+          rm -rf ~/.ansible/collections/ansible_collections/*
+          deactivate
+        env:
+          ANSIBLE_FORCE_COLOR: '1'
+          PY_COLORS: '1'
+          MOLECULE_BOX: ${{ matrix.box }}
+  molecule_linux_pipe:
+    name: Run Molecule tests - Linux to variable
+    runs-on:
+      - self-hosted
+      - linux
+      - x64
+    strategy:
+      fail-fast: false
+      matrix:
+        box:
+          - debian12_base
+          - fedora42_base
+          - fedora41_base
+          - rocky9_cis
+          - rocky8_cis
+          - ubuntu2404_base
+          - ubuntu2204_base
+          - ubuntu2004_base
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: 'trippsc2.adcs'
+      - name: Run Molecule tests
+        run: |
+          source ~/venv/ansible-2.16/bin/activate
+          rm -rf ~/.ansible/collections/ansible_collections/*
+          cd ./roles/signed_certificate
+          molecule test -s linux_pipe
+          rm -rf ~/.ansible/collections/ansible_collections/*
+          deactivate
+        env:
+          ANSIBLE_FORCE_COLOR: '1'
+          PY_COLORS: '1'
+          MOLECULE_BOX: ${{ matrix.box }}
+  molecule_win:
+    name: Run Molecule tests - Windows to file
+    runs-on:
+      - self-hosted
+      - linux
+      - x64
+    strategy:
+      fail-fast: false
+      matrix:
+        box:
+          - w2025_cis
+          - w2022_cis
+          - w2019_cis
+          - w11_24h2_base
+          - w11_23h2_base
+          - w10_22h2_base
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: 'trippsc2.adcs'
+      - name: Run Molecule tests
+        run: |
+          source ~/venv/ansible-2.16/bin/activate
+          rm -rf ~/.ansible/collections/ansible_collections/*
+          cd ./roles/signed_certificate
+          molecule test -s win
+          rm -rf ~/.ansible/collections/ansible_collections/*
+          deactivate
+        env:
+          ANSIBLE_FORCE_COLOR: '1'
+          PY_COLORS: '1'
+          MOLECULE_BOX: ${{ matrix.box }}
+  molecule_win_pipe:
+    name: Run Molecule tests - Windows to variable
+    runs-on:
+      - self-hosted
+      - linux
+      - x64
+    strategy:
+      fail-fast: false
+      matrix:
+        box:
+          - w2025_cis
+          - w2022_cis
+          - w2019_cis
+          - w11_24h2_base
+          - w11_23h2_base
+          - w10_22h2_base
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: 'trippsc2.adcs'
+      - name: Run Molecule tests
+        run: |
+          source ~/venv/ansible-2.16/bin/activate
+          rm -rf ~/.ansible/collections/ansible_collections/*
+          cd ./roles/signed_certificate
+          molecule test -s win_pipe
+          rm -rf ~/.ansible/collections/ansible_collections/*
+          deactivate
+        env:
+          ANSIBLE_FORCE_COLOR: '1'
+          PY_COLORS: '1'
+          MOLECULE_BOX: ${{ matrix.box }}

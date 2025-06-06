@@ -1,0 +1,43 @@
+---
+name: Molecule - certificate_authority role
+'on':
+  workflow_call: {}
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+    paths:
+      - galaxy.yml
+      - roles/certificate_authority/**
+      - '!roles/certificate_authority/.aar_doc.yml'
+      - '!roles/certificate_authority/README.md'
+      - '!roles/certificate_authority/meta/argument_specs.yml'
+      - '!roles/certificate_authority/meta/main.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - galaxy.yml
+      - roles/certificate_authority/**
+      - '!roles/certificate_authority/.aar_doc.yml'
+      - '!roles/certificate_authority/README.md'
+      - '!roles/certificate_authority/meta/argument_specs.yml'
+      - '!roles/certificate_authority/meta/main.yml'
+defaults:
+  run:
+    working-directory: 'trippsc2.adcs'
+jobs:
+  molecule:
+    name: Run Molecule test
+    uses: trippsoft/github-actions/.github/workflows/molecule.yml@main
+    with:
+      working_directory: 'trippsc2.adcs'
+      role_name: 'certificate_authority'
+      box: ${{ matrix.box }}
+    strategy:
+      fail-fast: false
+      matrix:
+        box:
+          - w2025_cis
+          - w2022_cis
+          - w2019_cis

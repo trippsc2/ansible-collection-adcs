@@ -1,0 +1,43 @@
+---
+name: Molecule - sub_ca_certificate role
+'on':
+  workflow_call: {}
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+    paths:
+      - galaxy.yml
+      - roles/sub_ca_certificate/**
+      - '!roles/sub_ca_certificate/.aar_doc.yml'
+      - '!roles/sub_ca_certificate/README.md'
+      - '!roles/sub_ca_certificate/meta/argument_specs.yml'
+      - '!roles/sub_ca_certificate/meta/main.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - galaxy.yml
+      - roles/sub_ca_certificate/**
+      - '!roles/sub_ca_certificate/.aar_doc.yml'
+      - '!roles/sub_ca_certificate/README.md'
+      - '!roles/sub_ca_certificate/meta/argument_specs.yml'
+      - '!roles/sub_ca_certificate/meta/main.yml'
+defaults:
+  run:
+    working-directory: 'trippsc2.adcs'
+jobs:
+  molecule:
+    name: Run Molecule test
+    uses: trippsoft/github-actions/.github/workflows/molecule.yml@main
+    with:
+      working_directory: 'trippsc2.adcs'
+      role_name: 'sub_ca_certificate'
+      box: ${{ matrix.box }}
+    strategy:
+      fail-fast: false
+      matrix:
+        box:
+          - w2025_cis
+          - w2022_cis
+          - w2019_cis

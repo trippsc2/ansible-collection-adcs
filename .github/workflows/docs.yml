@@ -1,0 +1,44 @@
+---
+name: Generate Role Docs
+'on':
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+    paths:
+      - galaxy.yml
+  push:
+    branches:
+      - main
+    paths:
+      - galaxy.yml
+defaults:
+  run:
+    working-directory: 'trippsc2.adcs'
+jobs:
+  docs_certificate_authority:
+    name: Generate certificate_authority role documentation
+    permissions:
+      contents: write
+    uses: trippsoft/github-actions/.github/workflows/role-docs.yml@main
+    with:
+      working_directory: 'trippsc2.adcs'
+      role_name: 'certificate_authority'
+  docs_signed_certificate:
+    name: Generate signed_certificate role documentation
+    permissions:
+      contents: write
+    needs: docs_certificate_authority
+    uses: trippsoft/github-actions/.github/workflows/role-docs.yml@main
+    with:
+      working_directory: 'trippsc2.adcs'
+      role_name: 'signed_certificate'
+  docs_sub_ca_certificate:
+    name: Generate sub_ca_certificate role documentation
+    permissions:
+      contents: write
+    needs: docs_signed_certificate
+    uses: trippsoft/github-actions/.github/workflows/role-docs.yml@main
+    with:
+      working_directory: 'trippsc2.adcs'
+      role_name: 'sub_ca_certificate'
