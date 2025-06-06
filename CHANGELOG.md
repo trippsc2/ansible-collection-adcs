@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [1.4.3] - 2025-06-07
 
+### Role - certificate_authority
+
+- Changed deprecated references to **community.windows.win_certificate_info** module plugin to **ansible.windows.win_certificate_info**.
+- Changed deprecated references to **community.windows.win_iis_virtualdirectory** module plugin to **microsoft.iis.virtual_directory**.
+
+### Role - sub_ca_certificate
+
+- Changed deprecated references to **community.windows.win_certificate_info** module plugin to **ansible.windows.win_certificate_info**.
+
 ### Collection
 
 - Changed repository URL to use GitHub Organization.

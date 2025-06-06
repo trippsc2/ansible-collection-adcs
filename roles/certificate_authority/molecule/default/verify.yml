@@ -54,7 +54,7 @@
         
         - name: Check CertEnroll virtual directory is configured
           check_mode: true
-          community.windows.win_iis_virtualdirectory:
+          microsoft.iis.virtual_directory:
             site: Default Web Site
             physical_path: C:\Windows\system32\CertSrv\CertEnroll
             name: CertEnroll

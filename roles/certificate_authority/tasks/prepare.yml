@@ -5,7 +5,7 @@
     - not _winca_enterprise_parent_certificate
   block:
     - name: Get certificate store
-      community.windows.win_certificate_info:
+      ansible.windows.win_certificate_info:
         store_name: My
       register: _winca_cert_store
 

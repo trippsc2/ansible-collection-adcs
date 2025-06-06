@@ -4,7 +4,7 @@
     - subjects
   tasks:
     - name: Get certificate store
-      community.windows.win_certificate_info:
+      ansible.windows.win_certificate_info:
         store_name: My
       register: _winsubca_cert_store
 
