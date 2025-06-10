@@ -1,7 +1,7 @@
 <!-- BEGIN_ANSIBLE_DOCS -->
 
 # Ansible Role: trippsc2.adcs.signed_certificate
-Version: 1.4.3
+Version: 1.4.4
 
 This role generates a self-signed TLS certificate.
 
@@ -29,6 +29,7 @@ The role does the following:
 
 | Collection |
 | ---------- |
+| ansible.utils |
 | ansible.windows |
 | trippsc2.general |
 
