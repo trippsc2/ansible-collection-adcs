@@ -7,6 +7,18 @@ name: Generate Role Docs
       - main
     paths:
       - galaxy.yml
+      - roles/certificate_authority/.aar_doc.yml
+      - roles/certificate_authority/README.md
+      - roles/certificate_authority/meta/argument_specs.yml
+      - roles/certificate_authority/meta/main.yml
+      - roles/signed_certificate/.aar_doc.yml
+      - roles/signed_certificate/README.md
+      - roles/signed_certificate/meta/argument_specs.yml
+      - roles/signed_certificate/meta/main.yml
+      - roles/sub_ca_certificate/.aar_doc.yml
+      - roles/sub_ca_certificate/README.md
+      - roles/sub_ca_certificate/meta/argument_specs.yml
+      - roles/sub_ca_certificate/meta/main.yml
 defaults:
   run:
     working-directory: 'trippsc2.adcs'
