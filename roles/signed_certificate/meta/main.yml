@@ -35,6 +35,7 @@ galaxy_info:
         - focal
 
 collections:
+  - ansible.utils
   - ansible.windows
   - trippsc2.general
 

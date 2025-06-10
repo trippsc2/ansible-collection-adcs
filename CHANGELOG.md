@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.4] - 2025-06-10
+
+### Collection
+
+- Corrected missing or extra dependencies.
+
 ## [1.4.3] - 2025-06-07
 
 ### Role - certificate_authority

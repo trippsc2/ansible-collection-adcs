@@ -19,6 +19,7 @@ galaxy_info:
 collections:
   - ansible.windows
   - community.windows
+  - microsoft.iis
   - trippsc2.windows
 
 dependencies:

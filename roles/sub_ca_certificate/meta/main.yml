@@ -17,7 +17,7 @@ galaxy_info:
         - '2019'
 
 collections:
+  - ansible.utils
   - ansible.windows
-  - community.windows
 
 dependencies: []
