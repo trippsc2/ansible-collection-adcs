@@ -44,7 +44,6 @@ jobs:
           - rocky8_cis
           - ubuntu2404_base
           - ubuntu2204_base
-          - ubuntu2004_base
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -79,7 +78,6 @@ jobs:
           - rocky8_cis
           - ubuntu2404_base
           - ubuntu2204_base
-          - ubuntu2004_base
     steps:
       - name: Checkout
         uses: actions/checkout@v4
